@@ -17,22 +17,20 @@
   <h1 align="center">Machine Learning Operations</h1>
 
   <p align="center">
-    An awesome README template to jumpstart your projects!
-    <br />
-    <a href=""><strong>Explore the docs »</strong></a>
+    MLOps Là một trong những lĩnh vực mới nổi, được quan tâm bởi các nhà khoa học dữ liệu, kỹ sư ML và những người đam mê AI. MLOPs đươc định nghĩa là: Khả năng áp dụng các nguyên tắc của DevOps cho các ứng dụng học máy. (Theo <a href="https://github.com/cdfoundation/sig-mlops/blob/main/roadmap/2022/MLOpsRoadmap2022.md">Continuous Delivery Foundation SIG MLOps</a>). Trong phạm vi của bài viết này nhóm chúng tôi sẽ cố gắng đưa ra những định nghĩa ngắn nhất để giúp cho những ai đang bắt đầu tìm hiểu về lĩnh vực này tiếp cận một cách dễ dàng hơn. Chúng tôi rất mong nhận được góp ý của các bạn khi có những nội dung chưa chính xác. Thay mặt nhóm tôi xin trân thành cảm ơn.
     <br />
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template">View Demo</a>
+    <a href="https://github.com/open-thienhang-com/open">View Demo</a>
     ·
-    <a href="https://github.com/othneildrew/Best-README-Template/issues">Report Bug</a>
+    <a href="https://github.com/open-thienhang-com/open/issues">Report Bug</a>
     ·
-    <a href="https://github.com/othneildrew/Best-README-Template/issues">Request Feature</a>
+    <a href="https://github.com/open-thienhang-com/open/issues">Request Feature</a>
   </p>
 </div>
 
 <!-- TABLE OF CONTENTS -->
 <details>
-  <summary>Table of Contents</summary>
+  <summary>Nội dung chính của bài viết</summary>
   <ol>
     <li>
       <a href="#about-the-project">About The Project</a>
@@ -183,7 +181,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 Our Team: open@thienhang.com
 
-Project Link: [https://open.thienhang.com](https://open.thienhang.com)
+Project Link: [open.thienhang.com](https://open.thienhang.com)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
