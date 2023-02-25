@@ -76,7 +76,7 @@ Kết quả trả về gồm 9 records bao bọc lại bảng 1.1
 
 ### Dual source query processing
 
-Khi có nhiều hơn một nguồn dữ liệu, ví dụ cần kết hợp hai bảng lại để lấy thông tin chi tiết của một nhân viên
+Khi có nhiều hơn một nguồn dữ liệu, ví dụ cần kết hợp hai bảng lại để lấy thông tin chi tiết quyền của một nhân viên
 
 STEP 1: Cartesian Product
 
@@ -108,3 +108,22 @@ A INNER JOIN B
 ON
 'A.VALUE = B.VALUE'
 ```
+
+| Table A | Table B    | |
+| :---:   | :---: |:---: |
+| 1 | 3   | ❌ False
+| 1 | 4   | ❌ False
+| 2 | 3   | ❌ False
+| 2 | 4   | ✅ True
+
+Dựa vô điều kiện ON > giới hạn lại còn 1 record
+
+Ví dụ:
+
+```sh
+SELECT * from staff 
+CROSS JOIN staff_roles
+```
+
+
+wayne.carter@animalshelter.com 2018-04-02 Veterinarian
