@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <title>CI/CD Tools</title>
+
+  <link href="{{url_for('index_blueprint.static', filename = 'bootstrap.min.css')}}" rel="stylesheet">
+  <style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+
+    .b-example-divider {
+      height: 3rem;
+      background-color: rgba(0, 0, 0, .1);
+      border: solid rgba(0, 0, 0, .15);
+      border-width: 1px 0;
+      box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+    }
+
+    .b-example-vr {
+      flex-shrink: 0;
+      width: 1.5rem;
+      height: 100vh;
+    }
+
+    .bi {
+      vertical-align: -.125em;
+      fill: currentColor;
+    }
+
+    .nav-scroller {
+      position: relative;
+      z-index: 2;
+      height: 2.75rem;
+      overflow-y: hidden;
+    }
+
+    .nav-scroller .nav {
+      display: flex;
+      flex-wrap: nowrap;
+      padding-bottom: 1rem;
+      margin-top: -1px;
+      overflow-x: auto;
+      text-align: center;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+    }
+  </style>
+
+
+  <!-- Custom styles for this template -->
+  <link href="{{url_for('index_blueprint.static', filename = 'checkout.css')}}" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+  <div class="container">
+    <main>
+      <div class="py-5 text-center">
+        <img class="d-block mx-auto mb-4"
+          src="https://lh3.googleusercontent.com/proxy/cwtLU4BD5iQzLHKxvQ0pkcMBezEIEhKVexjkcCc8GGr6TDm1omV7098GFzVRRRontEHRZFfHV3qXPmjL7CaQsaWPDsE0vl6XMWiagvugN9xDJak_8J5T-g=s88-w88-h88-c-k"
+          alt="" width="72" height="57">
+        <h2>Integrated CI/CD Tools</h2>
+        <p class="lead">Your current workspace is: {{modules.root}}</p>
+        <!-- <p>Code run at: {{modules.working_dir}}</p> -->
+      </div>
+
+      <div class="row g-5">
+        <div class="col-md-5 col-lg-4">
+          <h4 class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-primary">Submodules</span>
+            <span class="badge bg-primary rounded-pill">{{modules.git_modules|length}}</span>
+          </h4>
+          <ul class="list-group mb-3">
+            {% for m in modules.git_modules %}
+            <li class="list-group-item d-flex justify-content-between lh-sm">
+              <div>
+                <h6 class="my-0">{{ m.name }}</h6>
+                <small class="text-muted">Commit hash: {{ m.hash }}</small>
+              </div>
+              <!-- <span class="text-muted">$12</span> -->
+            </li>
+            {% endfor %}
+          </ul>
+
+          <h4 class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-primary">Local Repositories</span>
+            <span class="badge bg-primary rounded-pill">{{modules.projects|length}}</span>
+          </h4>
+          <ul class="list-group mb-3">
+            {% for m in modules.projects %}
+            {% if m == "dashboard" %}
+            <li class="list-group-item d-flex justify-content-between bg-light">
+              <div class="text-success">
+                <h6 class="my-0">{{ m.name }}</h6>
+                <small>EXAMPLE</small>
+              </div>
+              <span class="text-success">OK</span>
+            </li>
+            {% else %}
+            <li class="list-group-item d-flex justify-content-between lh-sm">
+              <div>
+                <h6 class="my-0">{{ m.name }}</h6>
+                <small class="text-muted">Hash: {{ m.hash }}</small>
+              </div>
+            </li>
+            {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="col-md-7 col-lg-8 order-md-last">
+          <h4 class="mb-3">Add new submodule</h4>
+          <form class="needs-validation" novalidate>
+            <div class="row g-3">
+
+              <div class="col-12">
+                <div class="input-group mb-3">
+                  <label for="basic-url" class="form-label">Please input your new submodule:</label>
+                  <div class="input-group">
+                    <span class="input-group-text" id="basic-addon3"></span>
+                    <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+                    <button class="btn btn-outline-secondary" type="button">Add</button>
+                    <button class="btn btn-outline-secondary" type="button">Remove</button>
+                  </div>
+                  <div class="form-text">Example: </div>
+
+                </div>
+              </div>
+            </div>
+
+            <hr class="my-4">
+            <h4 class="mb-3">Deploy submodule</h4>
+            <div class="accordion" id="accordionExample">
+              {% for m in modules.git_modules %}
+              <div class="form-check form-switch form-check">
+                <input type="checkbox" class="form-check-input" id="same-address">
+                <label class="form-check-label" for="same-address"> {{ m.name }} (<code>#{{ m.hash }}</code>)</label>
+              </div>
+              {% endfor %}
+            </div>
+
+            <hr class="my-4">
+            <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop"
+              aria-controls="staticBackdrop">
+              Help
+            </button>
+
+            <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="staticBackdrop"
+              aria-labelledby="staticBackdropLabel">
+              <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="staticBackdropLabel">Offcanvas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+              </div>
+              <div class="offcanvas-body">
+                <div>
+                  I will not close if you click outside of me.
+                </div>
+              </div>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="same-address">
+              <label class="form-check-label" for="same-address">Sync all projects</label>
+            </div>
+
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="save-info">
+              <label class="form-check-label" for="save-info">Reset hard before sync</label>
+            </div>
+
+            <hr class="my-4">
+
+            <h4 class="mb-3">Data-hot management</h4>
+
+            <div class="my-3">
+
+            </div>
+
+
+
+            <hr class="my-4">
+
+          </form>
+        </div>
+      </div>
+    </main>
+
+    <footer class="my-5 pt-5 text-muted text-center text-small">
+      <p class="mb-1">&copy; 2023 DE Team</p>
+    </footer>
+  </div>
+
+
+  <script src="{{url_for('index_blueprint.static', filename = 'bootstrap.bundle.min.js')}}"></script>
+  <script src="{{url_for('index_blueprint.static', filename = 'checkout.js')}}"></script>
+</body>
+
+</html>

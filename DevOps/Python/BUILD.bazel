@@ -1,0 +1,47 @@
+package(default_visibility = ["//visibility:public"])
+
+load("@bazel_gazelle//:def.bzl", "gazelle")
+
+# gazelle:prefix 
+gazelle(name = "gazelle")
+
+gazelle(
+    name = "gazelle-update-repos",
+    args = [
+        "-from_file=go.mod",
+        "-to_macro=deps.bzl%go_dependencies",
+        "-prune",
+        "-build_file_proto_mode=disable_global",
+    ],
+    command = "update-repos",
+)
+
+load("@com_github_bazelbuild_buildtools//buildifier:def.bzl", "buildifier")
+
+buildifier(
+    name = "buildifier",
+)
+
+
+load("@rules_python//python:defs.bzl", "py_runtime", "py_runtime_pair")
+
+py_runtime(
+    name = "py3.9_x86_64",
+    interpreter_path = "/usr/local/bin/python3.9",
+    python_version = "PY3",
+)
+
+py_runtime_pair(
+    name = "python_x86_64",
+    py3_runtime = ":py3.9_x86_64",
+)
+
+toolchain(
+    name = "python_toolchain_x86_64",
+    target_compatible_with = [
+        "@platforms//os:macos",
+        "@platforms//cpu:x86_64",
+    ],
+    toolchain = ":python_x86_64",
+    toolchain_type = "@rules_python//python:toolchain_type",
+)
