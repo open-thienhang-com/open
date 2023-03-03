@@ -1,4 +1,4 @@
-from python.modules.adapter.http import OpenHttpService
+from Python.modules.adapter.flask import OpenHttpService
 from apiv1 import api_v1
 from views import ns_index
 

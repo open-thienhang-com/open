@@ -1,6 +1,6 @@
 
 
-from python.modules.adapter.http import OpenHttpService
+from modules.adapter.flask import OpenHttpService
 from apiv1 import api_v1
 # from apiv2 import api_v2
 

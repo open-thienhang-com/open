@@ -1,4 +1,4 @@
-from python.modules.adapter.http import OpenAPI
+from modules.adapter.flask import OpenAPI
 from .model1 import ns_model as model1
 from .model2 import ns_model as model2
 

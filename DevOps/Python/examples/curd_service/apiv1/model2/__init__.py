@@ -1,4 +1,4 @@
-from python.modules.adapter.http import OpenNamespace, OpenResource, OpenHttpRespone
+from modules.adapter.flask import OpenNamespace, OpenResource, OpenHttpRespone
 
 ns_model = OpenNamespace(
     name="model2",
