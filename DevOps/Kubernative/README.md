@@ -14,6 +14,7 @@ Một dàn nhạc sẽ bao gồm:
 
 ### Kubernetes
 - Là một Container Orchestration Tool, là một tool open source được phát triển bởi Google.
+- Nó được thiết kế để giải quyết vấn đề quản lý ứng dụng trong môi trường đám mây và hệ thống phân tán.
 - Kubernetes đóng vai trò như là một nhạc trưởng của các container hay là service (đóng vai trò như những nhạc công)
 - Kubernetes đảm bảo cho các service hoạt động trơn tru theo chỉ dẫn từ 1 file config. File này có đuôi là yaml hoặc là yml. File config này đóng vai trò như là Composer - nhà soạn nhạc vậy.
 
@@ -57,4 +58,32 @@ Trước tim chúng ta cần tìm hiểu về các kiến trúc sau:
 - Giả sử ứng dụng của chúng ta có NodeJS container, Java spring container, MySQL container, SQL Server container. Như vậy host là nơi chứa các container và mỗi host cần phải có 1 địa chỉ ip. Địa chỉ ip này là nội bộ và nằm trong network của mỗi cluster. Nếu 1 container bị crack thì pod sẽ bị restart và 1 pod khác sẽ được tái sinh, sẽ có nhiều node giống nhau ta gọi đó là replicas.
 
 ![](https://www.opsramp.com/wp-content/uploads/2022/07/Kubernetes-Architecture.png)
+
+### Lợi ích của Kubernetes:
+
+- Quản lý container: Kubernetes giúp quản lý các container trong môi trường đám mây, đồng thời cung cấp khả năng giám sát, điều khiển và mở rộng các ứng dụng.
+- Tự động hóa: Kubernetes cho phép tự động hóa các tác vụ như triển khai, cập nhật, khôi phục, mở rộng và giảm quy mô các ứng dụng, giúp giảm thiểu tối đa sự can thiệp thủ công của con người.
+- Tích hợp tốt: Kubernetes tương thích với nhiều hệ thống khác nhau như Docker, Amazon Web Services (AWS), Microsoft Azure và Google Cloud Platform (GCP).
+- Tăng tính sẵn sàng: Kubernetes cung cấp khả năng chuyển đổi dự phòng tự động, giúp ứng dụng vẫn hoạt động khi có lỗi xảy ra.
+
+### Hạn chế của Kubernetes:
+
+- Phức tạp: Vì Kubernetes có nhiều tính năng và chức năng phức tạp, nên việc triển khai và quản lý nó có thể gặp phải khó khăn đối với các nhà phát triển mới.
+- Yêu cầu kỹ năng cao: Việc triển khai và quản lý Kubernetes đòi hỏi các kỹ năng chuyên môn cao như kiến thức về hệ thống và mạng, lập trình và quản lý container.
+- Chi phí cao: Sử dụng Kubernetes đòi hỏi các tài nguyên phần cứng và mạng đáng kể, do đó, chi phí triển khai. Kubernetes cũng đòi hỏi chi phí về nhân lực để triển khai và quản lý hệ thống, đặc biệt là trong các tổ chức lớn và phức tạp.
+- Không phù hợp với ứng dụng nhỏ: Kubernetes được thiết kế để quản lý các ứng dụng phức tạp và có thể không phù hợp cho các ứng dụng nhỏ hơn.
+
+### Các thuật ngữ trong Kubenetes
+
+- Cluster: Một cluster là một nhóm các máy chủ hoạt động cùng nhau để triển khai và quản lý các container trong Kubernetes.
+- Node: Một node là một máy chủ hoạt động trong cluster và có khả năng chứa các container. Các node cung cấp các tài nguyên để chạy các ứng dụng được triển khai trong Kubernetes.
+- Pod: Pod là đơn vị nhỏ nhất trong Kubernetes và bao gồm một hoặc nhiều container. Pod cung cấp môi trường để các container chạy và chia sẻ tài nguyên với nhau.
+- Deployment: Deployment là tài nguyên trong Kubernetes được sử dụng để quản lý các replica set và triển khai ứng dụng trên cluster. Deployment cung cấp các tính năng như tự động khởi động lại, cập nhật và giảm quy mô các replica set.
+- Deployment: Deployment là tài nguyên trong Kubernetes được sử dụng để quản lý các replica set và triển khai ứng dụng trên cluster. Deployment cung cấp các tính năng như tự động khởi động lại, cập nhật và giảm quy mô các replica set.
+- Service: Service là tài nguyên trong Kubernetes được sử dụng để cung cấp một điểm đầu vào duy nhất cho các pod của ứng dụng. Service giúp cân bằng tải giữa các pod và cho phép các ứng dụng chạy trên các node khác nhau trong cluster.
+- Namespace: Namespace là một cách để phân chia và quản lý các tài nguyên trong Kubernetes. Nó cho phép tách các ứng dụng và các nhóm tài nguyên khác nhau để quản lý dễ dàng hơn.
+- ConfigMap: ConfigMap là tài nguyên trong Kubernetes được sử dụng để lưu trữ các thông tin cấu hình cho ứng dụng. ConfigMap cung cấp một cách để cập nhật thông tin cấu hình mà không cần phải triển khai lại ứng dụng.
+- Secret: Secret là tài nguyên trong Kubernetes được sử dụng để lưu trữ các thông tin bảo mật như mật khẩu, chứng chỉ SSL, hoặc khóa mã hóa. Secret đảm bảo rằng thông tin bảo mật được lưu trữ an toàn và không bị truy cập bởi các người dùng không có quyền truy cập.
+
+Ngoài những thuật ngữ trên, còn có một số thuật ngữ khác trong Kubernetes như StatefulSet, DaemonSet, Job, CronJob, Horizontal Pod Autoscaler, và nhiều hơn nữa. Tất cả các thuật ngữ này cùng với nhau tạo thành một hệ thống đồng bộ và linh hoạt để triển khai và quản lý các ứng dụng trong môi trường đám mây. Hiểu và sử dụng chúng một cách hiệu quả sẽ giúp người dùng tối ưu hóa quy trình triển khai và quản lý ứng dụng của họ.
 
