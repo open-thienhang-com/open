@@ -79,7 +79,6 @@ Trước tim chúng ta cần tìm hiểu về các kiến trúc sau:
 - Node: Một node là một máy chủ hoạt động trong cluster và có khả năng chứa các container. Các node cung cấp các tài nguyên để chạy các ứng dụng được triển khai trong Kubernetes.
 - Pod: Pod là đơn vị nhỏ nhất trong Kubernetes và bao gồm một hoặc nhiều container. Pod cung cấp môi trường để các container chạy và chia sẻ tài nguyên với nhau.
 - Deployment: Deployment là tài nguyên trong Kubernetes được sử dụng để quản lý các replica set và triển khai ứng dụng trên cluster. Deployment cung cấp các tính năng như tự động khởi động lại, cập nhật và giảm quy mô các replica set.
-- Deployment: Deployment là tài nguyên trong Kubernetes được sử dụng để quản lý các replica set và triển khai ứng dụng trên cluster. Deployment cung cấp các tính năng như tự động khởi động lại, cập nhật và giảm quy mô các replica set.
 - Service: Service là tài nguyên trong Kubernetes được sử dụng để cung cấp một điểm đầu vào duy nhất cho các pod của ứng dụng. Service giúp cân bằng tải giữa các pod và cho phép các ứng dụng chạy trên các node khác nhau trong cluster.
 - Namespace: Namespace là một cách để phân chia và quản lý các tài nguyên trong Kubernetes. Nó cho phép tách các ứng dụng và các nhóm tài nguyên khác nhau để quản lý dễ dàng hơn.
 - ConfigMap: ConfigMap là tài nguyên trong Kubernetes được sử dụng để lưu trữ các thông tin cấu hình cho ứng dụng. ConfigMap cung cấp một cách để cập nhật thông tin cấu hình mà không cần phải triển khai lại ứng dụng.
