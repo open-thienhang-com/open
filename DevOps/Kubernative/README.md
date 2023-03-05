@@ -87,3 +87,7 @@ Trước tim chúng ta cần tìm hiểu về các kiến trúc sau:
 
 Ngoài những thuật ngữ trên, còn có một số thuật ngữ khác trong Kubernetes như StatefulSet, DaemonSet, Job, CronJob, Horizontal Pod Autoscaler, và nhiều hơn nữa. Tất cả các thuật ngữ này cùng với nhau tạo thành một hệ thống đồng bộ và linh hoạt để triển khai và quản lý các ứng dụng trong môi trường đám mây. Hiểu và sử dụng chúng một cách hiệu quả sẽ giúp người dùng tối ưu hóa quy trình triển khai và quản lý ứng dụng của họ.
 
+### Kubernetes roadmap
+    Lộ trình học Kubernetes bạn có thể xem tại https://roadmap.sh/kubernetes
+    
+    ![](https://roadmap.sh/roadmaps/kubernetes.png)
