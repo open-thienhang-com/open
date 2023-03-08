@@ -7,7 +7,8 @@
 
 ## 2. Class
 
-Trong OOP có **Class** như 1 khuôn mẫu. Class sẽ có các **thuộc tính(properties)** và các **phương thức (methods)**
+    - Trong OOP có **_Class_** như 1 khuôn mẫu.
+    - Class sẽ có các **_thuộc tính(properties)_** và các **_phương thức (methods)_**
 
 ## 3. Tính đóng gói (Encapsulation)
 
