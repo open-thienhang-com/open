@@ -79,7 +79,29 @@ Mọi người có thể tham gia vào lĩnh vực MLops bao gồm các chuyên 
 
 ### Built With
 
-This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
+MLOps sử dụng nhiều công nghệ để quản lý, triển khai và duy trì các mô hình học máy. Dưới đây là một số công nghệ phổ biến trong MLOps:
+
+* Công nghệ đám mây: Đám mây là một phần quan trọng của MLOps, cho phép triển khai và quản lý các mô hình học máy trên nền tảng đám mây. Các nền tảng đám mây phổ biến bao gồm Amazon Web Services (AWS), Microsoft Azure và Google Cloud Platform.
+
+* Công nghệ container: Container là một công nghệ quan trọng trong MLOps, cho phép triển khai các mô hình học máy và ứng dụng một cách độc lập, đồng thời giảm thiểu sự phụ thuộc vào các yếu tố môi trường.
+
+* Công nghệ mã nguồn mở: MLOps sử dụng nhiều công nghệ mã nguồn mở như Python, R và TensorFlow để phát triển và triển khai các mô hình học máy.
+
+* Công nghệ tự động hóa: MLOps sử dụng nhiều công nghệ tự động hóa như Ansible, Puppet và Chef để tự động hóa quá trình triển khai và quản lý các mô hình học máy.
+
+* Công nghệ điều khiển phiên bản: Công nghệ điều khiển phiên bản như Git và SVN được sử dụng để quản lý các phiên bản của các mô hình học máy và mã nguồn.
+
+* Công nghệ giám sát và phân tích dữ liệu: Công nghệ giám sát và phân tích dữ liệu như Grafana và Kibana được sử dụng để giám sát và phân tích các thông tin liên quan đến các mô hình học máy và hệ thống của chúng.
+
+* Công nghệ ảo hóa: Công nghệ ảo hóa như VMware và VirtualBox được sử dụng để tạo môi trường phát triển và triển khai các mô hình học máy
+
+* Công nghệ DevOps: MLOps chia sẻ nhiều giống với DevOps, đặc biệt là trong việc tập trung vào việc xây dựng quá trình triển khai và phát triển tự động hóa. Do đó, các công nghệ DevOps như Jenkins, GitLab và Travis CI cũng được sử dụng trong MLOps.
+
+* Công nghệ Big Data: Trong MLOps, các mô hình học máy thường được xây dựng trên dữ liệu lớn. Do đó, các công nghệ Big Data như Hadoop, Spark và Kafka cũng được sử dụng trong MLOps để xử lý và lưu trữ dữ liệu.
+
+* Công nghệ Internet of Things (IoT): IoT cung cấp các dữ liệu cảm biến thường xuyên và phong phú, điều này có thể được sử dụng trong các mô hình học máy. Do đó, các công nghệ IoT như Raspberry Pi và Arduino cũng được sử dụng trong MLOps để thu thập và xử lý các dữ liệu này.
+
+Các công nghệ này được sử dụng trong MLOps để đảm bảo rằng các mô hình học máy được phát triển và triển khai một cách nhanh chóng, đáng tin cậy và dễ dàng quản lý. Điều này sẽ giúp cho các doanh nghiệp có thể tối ưu hóa các mô hình học máy của họ để đạt được hiệu suất cao nhất, đồng thời tiết kiệm thời gian và chi phí cho quá trình phát triển và triển khai các mô hình học máy.
 
 * [Next.js](https://nextjs.org/)
 * [React.js](https://reactjs.org/)
