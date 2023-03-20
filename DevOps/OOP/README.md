@@ -23,13 +23,14 @@ Ví dụ: A Dee có bồ và a Dee giấu nên chỉ có anh Dee biết và MT k
 ## 4. Tính kế thừa (Inheritance)
 
 ```
-Ví du: MT kế thừa từ my father làn da đen, nhưng MT lại có giới tánh nữ mà cha lại là giới tánh nam nên ở đây (gọi là override - tái định nghĩa) và MT thích nghe rap cha MT thì không (gọi là con hơn cha nhà có phúc, đùa thôi điều này nghĩa là ngoài những cái kế thừa từ class cha, class con cũng có thể thêm thuộc tính hoặc phương thức riêng)
+Ví dụ: Ta có lớp **TamGiac** chứa thông tin toạ độ của 3 điểm A, B, C. Tam giác cân là 1 trường hợp đặc biệt của tam giác (ngược lại tam giác là trường hợp tổng quát của tam giác cân).
+Ví du: MT kế thừa từ my father làn da đen, nhưng MT lại có giới tánh nữ mà cha lại là giới tánh nam nên ở đây (gọi là override - tái định nghĩa) và MT thích nghe rap cha MT thì không (class con có thuộc tính hoặc phương thức riêng)
 ```
 
 ## 5. Tính đa hình (Polymorphism)
 
     - overloading đa hình khi biên dịch(compile time) : Trong 1 class các phương thức (methods) có cùng tên nhưng kiểu trả về và tham số truyền vào khác nhau (số lượng, kiểu)
-    - overriding(đa hình ở thời điểm thực thi(runtime)): Các phương thức được thực hiện ở các lớp con kế thừa từ lớp cha (base class). Nội dung thực hiện bên trong mỗi lớp khác nhau tùy vào logic nghiệp vụ. Chỉ khi nào runtime ta mới biết được đối tượng sẽ sử dụng phương thức nào
+    - overriding(đa hình ở thời điểm thực thi(runtime)): Các phương thức được thực hiện ở các lớp con kế thừa từ lớp cha. Nội dung thực hiện bên trong mỗi lớp khác nhau tùy vào logic nghiệp vụ. Chỉ khi nào runtime ta mới biết được đối tượng sẽ sử dụng phương thức nào
 
 ```
 Ví dụ: Lớp con chó và con mèo kế thừa từ lớp động vật nhưng tiếng kêu của nó sẽ khác nhau
