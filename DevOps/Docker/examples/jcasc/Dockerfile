@@ -8,3 +8,4 @@ COPY casc.yaml /var/jenkins_home/casc.yaml
 #Step1: docker build -t jenkins-image . 
 #Step2: docker run --name jenkins --rm -p 8080:8080 --env JENKINS_ADMIN_ID=admin --env JENKINS_ADMIN_PASSWORD=minhthu jenkins-image
 #your acc: username: admin / password: minhthu
+#ref: https://www.digitalocean.com/community/tutorials/how-to-automate-jenkins-setup-with-docker-and-jenkins-configuration-as-code
