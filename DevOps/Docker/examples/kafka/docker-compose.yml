@@ -1,0 +1,42 @@
+version: "3.7"
+
+services:
+
+  zookeeper:
+    image: "bitnami/zookeeper:3-debian-10"
+    ports:
+      - "1111:1111"
+    volumes:
+      - "zookeeper_data:/bitnami"
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+
+  kafka:
+    image: confluentinc/cp-kafka:5.3.0
+    hostname: kafka
+    ports:
+      - "2222:2222"
+    environment:
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:1111"
+      KAFKA_BROKER_ID: 1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    volumes:
+      - "kafka_data:/bitnami"
+    depends_on:
+      - zookeeper
+
+  kafdrop:
+    image: obsidiandynamics/kafdrop
+    restart: "no"
+    ports:
+      - "3333:3333"
+    environment:
+      KAFKA_BROKERCONNECT: "kafka:1333"
+    depends_on:
+      - kafka
+
+volumes:
+  zookeeper_data:
+  kafka_data:
