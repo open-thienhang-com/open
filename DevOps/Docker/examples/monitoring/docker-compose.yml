@@ -1,43 +1,43 @@
 version: "3.7"
 services:
-  curity:
-    container_name: idsvr
-    environment:
-      PASSWORD: "Password1"
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "Password1"
-    image: curity.azurecr.io/curity/idsvr:latest
-    ports:
-      - "6749:6749"
-      - "4466:4466"
-      - "8443:8443"
-    volumes:
-      - ./config/idsvr/license.json:/opt/idsvr/etc/init/license/license.json
-      - ./config/idsvr/basic_config.xml:/opt/idsvr/etc/init/basic_config.xml
-      - ./config/idsvr/example_config.xml:/opt/idsvr/etc/init/example_config.xml
-    links:
-      - curity-data
-    networks:
-      demonetwork:
-        aliases:
-          - idsvr
+  # curity:
+  #   container_name: idsvr
+  #   environment:
+  #     PASSWORD: "Password1"
+  #     POSTGRES_USER: "postgres"
+  #     POSTGRES_PASSWORD: "Password1"
+  #   image: curity.azurecr.io/curity/idsvr:latest
+  #   ports:
+  #     - "6749:6749"
+  #     - "4466:4466"
+  #     - "8443:8443"
+  #   volumes:
+  #     - ./config/idsvr/license.json:/opt/idsvr/etc/init/license/license.json
+  #     - ./config/idsvr/basic_config.xml:/opt/idsvr/etc/init/basic_config.xml
+  #     - ./config/idsvr/example_config.xml:/opt/idsvr/etc/init/example_config.xml
+  #   links:
+  #     - curity-data
+  #   networks:
+  #     demonetwork:
+  #       aliases:
+  #         - idsvr
 
-  curity-data:
-    container_name: database
-    image: postgres:14.5
-    ports:
-     - 5433:5432
-    volumes:
-      - ./config/postgresql/data:/var/lib/postgresql/data
-      - ./config/postgresql/create-database.sql:/docker-entrypoint-initdb.d/create-database.sql
-    environment:
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "Password1"
-      POSTGRES_DB: "idsvr"
-    networks:
-      demonetwork:
-        aliases:
-          - database
+  # curity-data:
+  #   container_name: database
+  #   image: postgres:14.5
+  #   ports:
+  #    - 5433:5432
+  #   volumes:
+  #     - ./config/postgresql/data:/var/lib/postgresql/data
+  #     - ./config/postgresql/create-database.sql:/docker-entrypoint-initdb.d/create-database.sql
+  #   environment:
+  #     POSTGRES_USER: "postgres"
+  #     POSTGRES_PASSWORD: "Password1"
+  #     POSTGRES_DB: "idsvr"
+  #   networks:
+  #     demonetwork:
+  #       aliases:
+  #         - database
 
   prometheus:
     container_name: prometheus
@@ -46,8 +46,8 @@ services:
       - "9090:9090"
     volumes:
       - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-    links:
-      - curity
+    # links:
+    #   - curity
     networks:
       demonetwork:
         aliases:
@@ -66,6 +66,9 @@ services:
       - type: bind
         source: ./config/grafana/dashboard.json
         target: /var/lib/grafana/dashboards/curity/idsvr-dashboard.json
+      - type: bind
+        source: ./config/grafana/go-process-dashboard.json
+        target: /var/lib/grafana/dashboards/curity/go-dashboard.json
     links:
       - prometheus
     networks:

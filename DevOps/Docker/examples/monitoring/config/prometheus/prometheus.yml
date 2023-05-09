@@ -1,7 +1,17 @@
 global:
-  scrape_interval: 15s
-  evaluation_interval: 15s
+  scrape_interval: 1s
+  evaluation_interval: 1s
+  external_labels:
+    monitor: "mattermost-monitor"
 scrape_configs:
-- job_name: curity
-  static_configs:
-  - targets: ['idsvr:4466']
+  - job_name: prometheus
+    static_configs:
+      - targets: ["localhost:9090"]
+  - job_name: golang
+    metrics_path: /debug/pprof/
+    static_configs:
+      - targets:
+          - golang:8002
+  # - job_name: curity
+  #   static_configs:
+  #     - targets: ["idsvr:4466"]
