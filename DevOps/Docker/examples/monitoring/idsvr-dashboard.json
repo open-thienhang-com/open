@@ -1,0 +1,2829 @@
+{
+  "__elements": {},
+  "__requires": [
+    {
+      "type": "panel",
+      "id": "bargauge",
+      "name": "Bar gauge",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "gauge",
+      "name": "Gauge",
+      "version": ""
+    },
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "9.1.6"
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    },
+    {
+      "type": "datasource",
+      "id": "prometheus",
+      "name": "Prometheus",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "text",
+      "name": "Text",
+      "version": ""
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "collapsed": false,
+      "datasource": {
+        "uid": "${Cluster}"
+      },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 31,
+      "panels": [],
+      "targets": [
+        {
+          "refId": "A"
+        }
+      ],
+      "title": "Summary - All instances",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${Cluster}"
+      },
+      "description": "The number of authentication events raised by all instances during the dashboard time.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 0,
+        "y": 1
+      },
+      "id": 33,
+      "interval": "",
+      "links": [],
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.1.6",
+      "repeatDirection": "v",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${Cluster}"
+          },
+          "editorMode": "code",
+          "expr": "sum(increase(idsvr_authentication_login_total[$__range]))",
+          "instant": true,
+          "legendFormat": "{{acr}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Authentications",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${Cluster}"
+      },
+      "description": "The number of SSO events raised by all instances during the dashboard time.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 3,
+        "y": 1
+      },
+      "id": 45,
+      "links": [],
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.1.6",
+      "targets": [
+        {
+          "expr": "sum(increase(idsvr_authentication_sso_total[$__range]))",
+          "instant": true,
+          "legendFormat": "{{acr}}",
+          "refId": "A"
+        }
+      ],
+      "title": "SSO",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${Cluster}"
+      },
+      "description": "The number of all oauth tokens issued by all instances during the dashboard time.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 6,
+        "y": 1
+      },
+      "id": 47,
+      "links": [],
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.1.6",
+      "targets": [
+        {
+          "expr": "sum(increase(idsvr_oauth_token_issued_total[$__range]))",
+          "instant": true,
+          "legendFormat": "{{token_type}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Tokens Issued",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${Cluster}"
+      },
+      "description": "The number of Introspections denied because of tokens not being active, by all instances during the dashboard time.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 9,
+        "y": 1
+      },
+      "id": 77,
+      "links": [],
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.1.6",
+      "targets": [
+        {
+          "expr": "sum(increase(idsvr_oauth_introspection_denied_total[$__range]))",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{token_type}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Introspections denied",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${Cluster}"
+      },
+      "description": "Indicates if all the instances are up and running",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "text": "Down"
+                },
+                "1": {
+                  "text": "OK"
+                }
+              },
+              "type": "value"
+            },
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "Down"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#d44a3a",
+                "value": null
+              },
+              {
+                "color": "rgba(237, 129, 40, 0.89)",
+                "value": 1
+              },
+              {
+                "color": "#299c46",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 12,
+        "y": 1
+      },
+      "id": 63,
+      "links": [],
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.1.6",
+      "repeatDirection": "v",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "min(up{job=~\"$idsvr_job\"})",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Status",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${Cluster}"
+      },
+      "description": "Indicates if any of the instances logged an error.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "from": 0,
+                "result": {
+                  "text": "None"
+                },
+                "to": 0
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 1,
+                "result": {
+                  "text": "ERROR"
+                },
+                "to": 100000
+              },
+              "type": "range"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#299c46",
+                "value": null
+              },
+              {
+                "color": "#FF9830",
+                "value": 1
+              },
+              {
+                "color": "#F2495C",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 15,
+        "y": 1
+      },
+      "id": 69,
+      "interval": "",
+      "links": [],
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.1.6",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "sum(log4j2_appender_total{level=~\"error|fatal\", job=~\"$idsvr_job\"})",
+          "format": "time_series",
+          "hide": false,
+          "legendFormat": "",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Error",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${Cluster}"
+      },
+      "description": "Indicates if there were any debug or trace logs detected on any of the instances in an interval of 5 minutes. As a result it will take at a minimum 5 minutes after you disabled the logs until this flag changes.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "from": 0,
+                "result": {
+                  "text": "Disabled"
+                },
+                "to": 0
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 1,
+                "result": {
+                  "text": "Enabled"
+                },
+                "to": 100000
+              },
+              "type": "range"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#299c46",
+                "value": null
+              },
+              {
+                "color": "#F2495C",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 18,
+        "y": 1
+      },
+      "id": 67,
+      "interval": "",
+      "links": [],
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.1.6",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "ceil(sum(increase(log4j2_appender_total{level=~\"debug|trace\", job=~\"$idsvr_job\"}[5m])))",
+          "format": "time_series",
+          "legendFormat": "",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Debug",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "datasource": {
+        "uid": "${Cluster}"
+      },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 5
+      },
+      "id": 55,
+      "panels": [],
+      "repeat": "Instance",
+      "targets": [
+        {
+          "refId": "A"
+        }
+      ],
+      "title": "Status $Instance",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${Cluster}"
+      },
+      "description": "Indicates if the server is up and running",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "text": "Down"
+                },
+                "1": {
+                  "text": "OK"
+                }
+              },
+              "type": "value"
+            },
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "Down"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#d44a3a",
+                "value": null
+              },
+              {
+                "color": "rgba(237, 129, 40, 0.89)",
+                "value": 1
+              },
+              {
+                "color": "#299c46",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 2,
+        "x": 0,
+        "y": 6
+      },
+      "id": 53,
+      "links": [],
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.1.5",
+      "repeatDirection": "v",
+      "targets": [
+        {
+          "expr": "up{instance=~\"$Instance\"}",
+          "legendFormat": "{{instance}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Status",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${Cluster}"
+      },
+      "description": "Indicates if there were any error logs detected. Reset the metrics if the error was resolved.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "from": 0,
+                "result": {
+                  "text": "None"
+                },
+                "to": 0
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 1,
+                "result": {
+                  "text": "ERROR"
+                },
+                "to": 100000
+              },
+              "type": "range"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#299c46",
+                "value": null
+              },
+              {
+                "color": "#FF9830",
+                "value": 1
+              },
+              {
+                "color": "#F2495C",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 2,
+        "x": 2,
+        "y": 6
+      },
+      "id": 70,
+      "interval": "",
+      "links": [],
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.1.5",
+      "targets": [
+        {
+          "expr": "sum(log4j2_appender_total{level=~\"error|fatal\", instance=~\"$Instance\"})",
+          "format": "time_series",
+          "hide": false,
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "title": "Error",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${Cluster}"
+      },
+      "description": "Indicates if there were any debug or trace logs detected on this instance in an interval of 5 minutes. As a result it will take at a minimum 5 minutes after you disabled the logs until this flag changes.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "from": 0,
+                "result": {
+                  "text": "Disabled"
+                },
+                "to": 0
+              },
+              "type": "range"
+            },
+            {
+              "options": {
+                "from": 1,
+                "result": {
+                  "text": "Enabled"
+                },
+                "to": 100000
+              },
+              "type": "range"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#299c46",
+                "value": null
+              },
+              {
+                "color": "#FF9830",
+                "value": 1
+              },
+              {
+                "color": "#F2495C",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 2,
+        "x": 4,
+        "y": 6
+      },
+      "id": 51,
+      "interval": "",
+      "links": [],
+      "maxDataPoints": 100,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.1.5",
+      "targets": [
+        {
+          "expr": "ceil(sum(rate(log4j2_appender_total{level=~\"debug|trace\", instance=~\"$Instance\"}[5m])))",
+          "format": "time_series",
+          "legendFormat": "{{instance}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Debug",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${Cluster}"
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 12,
+        "x": 6,
+        "y": 6
+      },
+      "id": 76,
+      "links": [],
+      "options": {
+        "content": "\n\n\n\n",
+        "mode": "markdown"
+      },
+      "pluginVersion": "9.1.5",
+      "targets": [
+        {
+          "refId": "A"
+        }
+      ],
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${Cluster}"
+      },
+      "description": "Last reported CPU usage in percent",
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 2,
+          "mappings": [],
+          "max": 1,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 0.3
+              },
+              {
+                "color": "red",
+                "value": 0.6
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 3,
+        "x": 0,
+        "y": 9
+      },
+      "id": 73,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "9.1.5",
+      "targets": [
+        {
+          "expr": "idsvr_cpu_usage{instance=~\"$Instance\"}",
+          "refId": "A"
+        }
+      ],
+      "title": "CPU",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${Cluster}"
+      },
+      "description": "Last reported total memory usage in MiB",
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 2,
+          "mappings": [],
+          "max": 2048,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 1024
+              },
+              {
+                "color": "red",
+                "value": 1536
+              }
+            ]
+          },
+          "unit": "mbytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 3,
+        "x": 3,
+        "y": 9
+      },
+      "id": 74,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "9.1.5",
+      "targets": [
+        {
+          "expr": "sum(idsvr_jvm_memory_used{instance=~\"$Instance\"})/1024/1024",
+          "format": "time_series",
+          "instant": false,
+          "intervalFactor": 1,
+          "refId": "A"
+        }
+      ],
+      "title": "Memory",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${Cluster}"
+      },
+      "description": "Shows the number of log entries by their type",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 6,
+        "y": 9
+      },
+      "id": 2,
+      "links": [],
+      "options": {
+        "displayMode": "lcd",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true
+      },
+      "pluginVersion": "9.1.5",
+      "targets": [
+        {
+          "expr": "log4j2_appender_total{instance=~\"$Instance\"}",
+          "format": "time_series",
+          "groupBy": [
+            {
+              "params": [
+                "$__rate_interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "instant": false,
+          "intervalFactor": 1,
+          "legendFormat": "{{level}}@{{instance}}",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Logs",
+      "type": "bargauge"
+    },
+    {
+      "collapsed": false,
+      "datasource": {
+        "uid": "${Cluster}"
+      },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 16
+      },
+      "id": 39,
+      "panels": [],
+      "targets": [
+        {
+          "refId": "A"
+        }
+      ],
+      "title": "Performance",
+      "type": "row"
+    },
+    {
+      "id": 4,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 17
+      },
+      "type": "timeseries",
+      "title": "CPU",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${Cluster}"
+      },
+      "pluginVersion": "9.1.6",
+      "description": "Shows the CPU usage in percent",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "showPoints": "never",
+            "pointSize": 5,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "axisCenteredZero": false,
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "value": null,
+                "color": "green"
+              },
+              {
+                "value": 80,
+                "color": "red"
+              }
+            ]
+          },
+          "links": [],
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "options": {
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        },
+        "legend": {
+          "showLegend": true,
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "mean",
+            "max"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "idsvr_cpu_usage{instance=~\"$Instance\"}",
+          "hide": false,
+          "legendFormat": "CPU Usage@{{instance}}",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null
+    },
+    {
+      "id": 6,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 17
+      },
+      "type": "timeseries",
+      "title": "Memory",
+      "repeatDirection": "h",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${Cluster}"
+      },
+      "pluginVersion": "9.1.6",
+      "description": "Shows the memory usage in mb",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "showPoints": "never",
+            "pointSize": 5,
+            "stacking": {
+              "mode": "normal",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "axisCenteredZero": false,
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "value": null,
+                "color": "green"
+              },
+              {
+                "value": 80,
+                "color": "red"
+              }
+            ]
+          },
+          "links": [],
+          "unit": "decbytes"
+        },
+        "overrides": []
+      },
+      "options": {
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        },
+        "legend": {
+          "showLegend": true,
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "mean",
+            "max"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (memory_area, instance) (idsvr_jvm_memory_used{instance=~\"$Instance\"})",
+          "format": "time_series",
+          "hide": false,
+          "instant": false,
+          "intervalFactor": 1,
+          "legendFormat": "{{memory_area}}@{{instance}}",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null
+    },
+    {
+      "id": 15,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 25
+      },
+      "type": "timeseries",
+      "title": "HTTP Server Timing",
+      "datasource": {
+        "uid": "${Cluster}",
+        "type": "prometheus"
+      },
+      "pluginVersion": "9.1.6",
+      "interval": "1m",
+      "description": "Shows the average time in seconds that it takes to process an HTTP request. This includes requests to admin and runtime nodes.",
+      "links": [],
+      "options": {
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        },
+        "legend": {
+          "showLegend": true,
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "mean",
+            "max"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(idsvr_http_server_request_time_sum{instance=~\"$Instance\"}[$__rate_interval])/rate(idsvr_http_server_request_time_count{instance=~\"$Instance\"}[$__rate_interval])",
+          "format": "time_series",
+          "legendFormat": "HTTP requests@{{instance}}",
+          "refId": "A",
+          "editorMode": "code",
+          "range": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "showPoints": "never",
+            "pointSize": 5,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "axisCenteredZero": false,
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "line+area"
+            }
+          },
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          },
+          "links": [],
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "timeFrom": null,
+      "timeShift": null
+    },
+    {
+      "id": 25,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 25
+      },
+      "type": "timeseries",
+      "title": "DAP Timing",
+      "datasource": {
+        "uid": "${Cluster}",
+        "type": "prometheus"
+      },
+      "pluginVersion": "9.1.6",
+      "interval": "1m",
+      "description": "Shows the average time in seconds that it takes to process datasource queries. Grouped by datasource type and instance.",
+      "links": [],
+      "options": {
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        },
+        "legend": {
+          "showLegend": true,
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "mean",
+            "max"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (ds_id, instance) (rate(idsvr_datasource_account_sum{instance=~\"$Instance\"}[$__rate_interval]) / rate(idsvr_datasource_account_count{instance=~\"$Instance\"}[$__rate_interval]))",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "account@{{instance}}",
+          "refId": "B",
+          "editorMode": "code"
+        },
+        {
+          "expr": "sum by (ds_id, instance) (rate(idsvr_datasource_attribute_sum{instance=~\"$Instance\"}[$__rate_interval]) / rate(idsvr_datasource_attribute_count{instance=~\"$Instance\"}[$__rate_interval]))",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "attribute@{{instance}}",
+          "refId": "A",
+          "editorMode": "code"
+        },
+        {
+          "expr": "sum by (ds_id, instance) (rate(idsvr_datasource_bucket_sum{instance=~\"$Instance\"}[$__rate_interval]) / rate(idsvr_datasource_bucket_count{instance=~\"$Instance\"}[$__rate_interval]))",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "bucket@{{instance}}",
+          "refId": "C",
+          "editorMode": "code"
+        },
+        {
+          "expr": "sum by (ds_id, instance) (rate(idsvr_datasource_credential_sum{instance=~\"$Instance\"}[$__rate_interval]) / rate(idsvr_datasource_credential_count{instance=~\"$Instance\"}[$__rate_interval]))",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "credential@{{instance}}",
+          "refId": "D",
+          "editorMode": "code",
+          "range": true,
+          "exemplar": false
+        },
+        {
+          "expr": "sum by (ds_id, instance) (rate(idsvr_datasource_dcr_sum{instance=~\"$Instance\"}[$__rate_interval]) / rate(idsvr_datasource_dcr_count{instance=~\"$Instance\"}[$__rate_interval]))",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "DCR@{{instance}}",
+          "refId": "E",
+          "editorMode": "code"
+        },
+        {
+          "expr": "sum by (ds_id, instance) (rate(idsvr_datasource_delegation_sum{instance=~\"$Instance\"}[$__rate_interval]) / rate(idsvr_datasource_delegation_count{instance=~\"$Instance\"}[$__rate_interval]))",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "delegation@{{instance}}",
+          "refId": "F",
+          "editorMode": "code"
+        },
+        {
+          "expr": "sum by (ds_id, instance) (rate(idsvr_datasource_device_sum{instance=~\"$Instance\"}[$__rate_interval]) / rate(idsvr_datasource_device_count{instance=~\"$Instance\"}[$__rate_interval]))",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "device@{{instance}}",
+          "refId": "G",
+          "editorMode": "code"
+        },
+        {
+          "expr": "sum by (ds_id, instance) (rate(idsvr_datasource_nonce_sum{instance=~\"$Instance\"}[$__rate_interval]) / rate(idsvr_datasource_nonce_count{instance=~\"$Instance\"}[$__rate_interval]))",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "nonce@{{instance}}",
+          "refId": "H",
+          "editorMode": "code"
+        },
+        {
+          "expr": "sum by (ds_id, instance) (rate(idsvr_datasource_session_sum{instance=~\"$Instance\"}[$__rate_interval]) / rate(idsvr_datasource_session_count{instance=~\"$Instance\"}[$__rate_interval]))",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "session@{{instance}}",
+          "refId": "I",
+          "editorMode": "code"
+        },
+        {
+          "expr": "sum by (ds_id, instance) (rate(idsvr_datasource_token_sum{instance=~\"$Instance\"}[$__rate_interval]) / rate(idsvr_datasource_token_count{instance=~\"$Instance\"}[$__rate_interval]))",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "token@{{instance}}",
+          "refId": "J",
+          "editorMode": "code"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "showPoints": "never",
+            "pointSize": 5,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "axisCenteredZero": false,
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "line+area"
+            }
+          },
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent",
+                "value": null
+              },
+              {
+                "value": 0.8,
+                "color": "red"
+              }
+            ]
+          },
+          "links": [],
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "timeFrom": null,
+      "timeShift": null
+    },
+    {
+      "collapsed": false,
+      "datasource": {
+        "uid": "${Cluster}"
+      },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 33
+      },
+      "id": 49,
+      "panels": [],
+      "targets": [
+        {
+          "refId": "A"
+        }
+      ],
+      "title": "Authentication",
+      "type": "row"
+    },
+    {
+      "id": 24,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 34
+      },
+      "type": "timeseries",
+      "title": "SSO Rate",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${Cluster}"
+      },
+      "interval": "1m",
+      "description": "Shows the average increase of SSO events per second. Grouped by authentication method.",
+      "options": {
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        },
+        "legend": {
+          "showLegend": true,
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "mean",
+            "max"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (acr) (rate(idsvr_authentication_sso_total{instance=~\"$Instance\"}[$__rate_interval]))",
+          "format": "time_series",
+          "hide": false,
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "{{acr}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "showPoints": "never",
+            "pointSize": 5,
+            "stacking": {
+              "mode": "normal",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "axisCenteredZero": false,
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "value": null,
+                "color": "green"
+              },
+              {
+                "value": 80,
+                "color": "red"
+              }
+            ]
+          },
+          "links": [],
+          "unit": "short",
+          "decimals": 0
+        },
+        "overrides": []
+      },
+      "pluginVersion": "9.1.6",
+      "timeFrom": null,
+      "timeShift": null
+    },
+    {
+      "id": 23,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 34
+      },
+      "type": "timeseries",
+      "title": "Login Rate",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${Cluster}"
+      },
+      "interval": "1m",
+      "description": "Shows the average increase of login events per second. Grouped by authentication method.",
+      "options": {
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        },
+        "legend": {
+          "showLegend": true,
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "mean",
+            "max"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (acr) (rate(idsvr_authentication_login_total{instance=~\"$Instance\"}[$__rate_interval]))",
+          "format": "time_series",
+          "hide": false,
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "{{acr}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "showPoints": "never",
+            "pointSize": 5,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "axisCenteredZero": false,
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "value": null,
+                "color": "green"
+              },
+              {
+                "value": 80,
+                "color": "red"
+              }
+            ]
+          },
+          "links": [],
+          "unit": "short",
+          "decimals": 0
+        },
+        "overrides": []
+      },
+      "pluginVersion": "9.1.6",
+      "timeFrom": null,
+      "timeShift": null
+    },
+    {
+      "id": 68,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 42
+      },
+      "type": "timeseries",
+      "title": "Issued Token Rate",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${Cluster}"
+      },
+      "interval": "1m",
+      "description": "Shows the average increase of issued tokens per second. Grouped by token type.",
+      "options": {
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        },
+        "legend": {
+          "showLegend": true,
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "mean",
+            "max"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (token_type) (rate(idsvr_oauth_token_issued_total{instance=~\"$Instance\"}[$__rate_interval]))",
+          "format": "time_series",
+          "hide": false,
+          "intervalFactor": 1,
+          "legendFormat": "{{token_type}} token",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "showPoints": "never",
+            "pointSize": 5,
+            "stacking": {
+              "mode": "normal",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "axisCenteredZero": false,
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "value": null,
+                "color": "green"
+              },
+              {
+                "value": 80,
+                "color": "red"
+              }
+            ]
+          },
+          "links": [],
+          "unit": "short",
+          "decimals": 0
+        },
+        "overrides": []
+      },
+      "pluginVersion": "9.1.6",
+      "timeFrom": null,
+      "timeShift": null
+    },
+    {
+      "id": 71,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 42
+      },
+      "type": "timeseries",
+      "title": "Revoked Token Rate",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${Cluster}"
+      },
+      "interval": "1m",
+      "description": "Shows the average increase of revoked tokens per second. Group by token type.",
+      "options": {
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        },
+        "legend": {
+          "showLegend": true,
+          "displayMode": "table",
+          "placement": "bottom",
+          "calcs": [
+            "mean",
+            "max"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (token_type) (rate(idsvr_oauth_token_revoked_total{instance=~\"$Instance\"}[$__rate_interval]))",
+          "legendFormat": "{{token_type}} token",
+          "refId": "B"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "showPoints": "never",
+            "pointSize": 5,
+            "stacking": {
+              "mode": "normal",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "axisCenteredZero": false,
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "value": null,
+                "color": "green"
+              },
+              {
+                "value": 80,
+                "color": "red"
+              }
+            ]
+          },
+          "links": [],
+          "unit": "short",
+          "decimals": 0
+        },
+        "overrides": []
+      },
+      "pluginVersion": "9.1.6",
+      "timeFrom": null,
+      "timeShift": null
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${Cluster}"
+      },
+      "description": "Shows the absolute number of logins for an authenticator and instance during the given interval",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "green",
+            "mode": "fixed"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "noValue": "0",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 12,
+        "x": 0,
+        "y": 50
+      },
+      "id": 79,
+      "options": {
+        "displayMode": "basic",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true
+      },
+      "pluginVersion": "9.1.5",
+      "targets": [
+        {
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum by (acr) (increase(idsvr_authentication_login_total{instance=~\"$Instance\"}[$__rate_interval]))",
+          "format": "time_series",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "{{acr}}",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "Login Count",
+      "type": "bargauge"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 54
+      },
+      "id": 81,
+      "panels": [],
+      "title": "JDBC Connection Pool",
+      "type": "row"
+    },
+    {
+      "id": 83,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 55
+      },
+      "type": "timeseries",
+      "title": "Work Load (%)",
+      "datasource": {
+        "uid": "${Cluster}",
+        "type": "prometheus"
+      },
+      "description": "The percentage of connections in the pool that are active. Grouped by the name of the data source.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "showPoints": "auto",
+            "pointSize": 5,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "axisCenteredZero": false,
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 0.8
+              }
+            ]
+          },
+          "max": 1,
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "options": {
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        },
+        "legend": {
+          "showLegend": true,
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${Cluster}"
+          },
+          "editorMode": "code",
+          "expr": "sum by (ds_id) (idsvr_datasource_jdbc_pool_active_connections{instance=~\"$Instance\"} / idsvr_datasource_jdbc_pool_connections{instance=~\"$Instance\"})",
+          "legendFormat": "{{ds_id}}",
+          "range": true,
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 85,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 55
+      },
+      "type": "timeseries",
+      "title": "Average Usage Time (seconds)",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${Cluster}"
+      },
+      "description": "Average time in seconds that connections to a data source are allocated.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "showPoints": "auto",
+            "pointSize": 5,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "axisCenteredZero": false,
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "options": {
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        },
+        "legend": {
+          "showLegend": true,
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        }
+      },
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "sum by (ds_id) (rate(idsvr_datasource_jdbc_pool_connection_usage_sum{instance=~\"$Instance\"}[$__rate_interval]) / rate(idsvr_datasource_jdbc_pool_connection_usage_count{instance=~\"$Instance\"}[$__rate_interval]))",
+          "legendFormat": "{{ds_id}}",
+          "range": true,
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 84,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 63
+      },
+      "type": "timeseries",
+      "title": "Number of Pending Threads",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${Cluster}"
+      },
+      "pluginVersion": "9.1.6",
+      "description": "The average number of threads waiting for a connection to get available. The average is calculated over the time window defined by the dashboard.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "showPoints": "auto",
+            "pointSize": 5,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "axisCenteredZero": false,
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "options": {
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        },
+        "legend": {
+          "showLegend": true,
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${Cluster}"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum by (ds_id) (idsvr_datasource_jdbc_pool_pending_threads{instance=~\"$Instance\"})",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "{{ds_id}}",
+          "range": true,
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 86,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 63
+      },
+      "type": "timeseries",
+      "title": "Average Waiting Time (seconds)",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${Cluster}"
+      },
+      "description": "Average time in seconds that threads are waiting for a connection to a data source.",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "barAlignment": 0,
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "spanNulls": false,
+            "showPoints": "auto",
+            "pointSize": 5,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            },
+            "axisPlacement": "auto",
+            "axisLabel": "",
+            "axisColorMode": "text",
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "axisCenteredZero": false,
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "options": {
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        },
+        "legend": {
+          "showLegend": true,
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        }
+      },
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "sum by (ds_id) (rate(idsvr_datasource_jdbc_pool_connection_acquired_sum{instance=~\"$Instance\"}[$__rate_interval]) / rate(idsvr_datasource_jdbc_pool_connection_acquired_count{instance=~\"$Instance\"}[$__rate_interval]))",
+          "legendFormat": "{{ds_id}}",
+          "range": true,
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 71
+      },
+      "id": 96,
+      "panels": [],
+      "title": "HTTP Clients Timing",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${Cluster}"
+      },
+      "description": "Shows the average time in seconds that it takes an HTTP client to get an HTTP response.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "line+area"
+            }
+          },
+          "links": [],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent",
+                "value": null
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 80
+      },
+      "id": 116,
+      "interval": "1m",
+      "links": [],
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "9.1.6",
+      "repeat": "http_client_id",
+      "repeatDirection": "h",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${Cluster}"
+          },
+          "editorMode": "code",
+          "expr": "sum by (http_client_id) (rate(idsvr_http_client_request_successful_sum{instance=~\"$Instance\",http_client_id=~\"$http_client_id\"}[$__rate_interval])/rate(idsvr_http_client_request_successful_count{instance=~\"$Instance\",http_client_id=~\"$http_client_id\"}[$__rate_interval]))",
+          "format": "time_series",
+          "legendFormat": "Success Response",
+          "range": true,
+          "refId": "Success"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${Cluster}"
+          },
+          "editorMode": "code",
+          "expr": "sum by (http_client_id) (rate(idsvr_http_client_request_client_error_sum{instance=~\"$Instance\",http_client_id=~\"$http_client_id\"}[$__rate_interval])/rate(idsvr_http_client_request_client_error_count{instance=~\"$Instance\",http_client_id=~\"$http_client_id\"}[$__rate_interval]))",
+          "hide": false,
+          "legendFormat": "4xx Response",
+          "range": true,
+          "refId": "Client Error"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${Cluster}"
+          },
+          "editorMode": "code",
+          "expr": "sum by (http_client_id) (rate(idsvr_http_client_request_server_error_sum{instance=~\"$Instance\",http_client_id=~\"$http_client_id\"}[$__rate_interval])/rate(idsvr_http_client_request_server_error_count{instance=~\"$Instance\",http_client_id=~\"$http_client_id\"}[$__rate_interval]))",
+          "hide": false,
+          "legendFormat": "5xx Response",
+          "range": true,
+          "refId": "Server Error"
+        }
+      ],
+      "title": "${http_client_id}",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 37,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "Cluster",
+        "options": [],
+        "query": "prometheus",
+        "queryValue": "",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "tagsQuery": "",
+        "type": "datasource"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${Cluster}"
+        },
+        "definition": "label_values(idsvr_cpu_usage, instance)",
+        "hide": 0,
+        "includeAll": true,
+        "multi": true,
+        "name": "Instance",
+        "options": [],
+        "query": {
+          "query": "label_values(idsvr_cpu_usage, instance)",
+          "refId": "Cluster-Instance-Variable-Query"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${Cluster}"
+        },
+        "definition": "label_values(idsvr_cpu_usage, job)",
+        "description": "The job configured in Prometheus for scraping the Curity Identity Server",
+        "hide": 2,
+        "includeAll": false,
+        "multi": false,
+        "name": "idsvr_job",
+        "options": [],
+        "query": {
+          "query": "label_values(idsvr_cpu_usage, job)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "current": {
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${Cluster}"
+        },
+        "definition": "label_values(http_client_id)",
+        "description": "The ID of an HTTP client",
+        "hide": 2,
+        "includeAll": true,
+        "label": "http_client_id",
+        "multi": true,
+        "name": "http_client_id",
+        "options": [],
+        "query": {
+          "query": "label_values(http_client_id)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-5m",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "5s",
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ]
+  },
+  "timezone": "",
+  "title": "Curity Identity Server",
+  "uid": "pPzcnF-Zk",
+  "version": 3,
+  "weekStart": ""
+}
