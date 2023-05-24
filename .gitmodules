@@ -1,0 +1,3 @@
+[submodule "DataEngineering/DataEngineering/monorepo"]
+	path = DataEngineering/DataEngineering/monorepo
+	url = https://github.com/open-thienhang-com/monorepo.git
