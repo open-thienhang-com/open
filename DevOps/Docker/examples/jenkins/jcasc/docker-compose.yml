@@ -7,7 +7,7 @@ services:
     user: root
     restart: always
     hostname: 'localhost'
-    container_name: jenkins
+    container_name: jenkins_config
     ports:
         - '8080:8080'
         - '8443:443'
