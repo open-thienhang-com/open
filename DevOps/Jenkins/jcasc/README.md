@@ -5,31 +5,27 @@
   </picture>
 </a>
 
-[![Jenkins Regular Release](https://img.shields.io/endpoint?url=https%3A%2F%2Fwww.jenkins.io%2Fchangelog%2Fbadge.json)](https://www.jenkins.io/changelog)
-[![Jenkins LTS Release](https://img.shields.io/endpoint?url=https%3A%2F%2Fwww.jenkins.io%2Fchangelog-stable%2Fbadge.json)](https://www.jenkins.io/changelog-stable)
-[![Docker Pulls](https://img.shields.io/docker/pulls/jenkins/jenkins.svg)](https://hub.docker.com/r/jenkins/jenkins/)
-[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/3538/badge)](https://bestpractices.coreinfrastructure.org/projects/3538)
+# Set up Jenkins with docker compose
 
-<br />
-<br />
-<br />
+```
+version: "3.8"
+services:
+  jenkins:
+    privileged: true
+    user: root
+    restart: always
+    hostname: "localhost"
+    container_name: jenkins_config
+    ports:
+      - "9000:80"
+    build: .
+    environment:
+      - "JENKINS_ADMIN_ID=admin"
+      - "JENKINS_ADMIN_PASSWORD=minhthu"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
 
-# Jenkins cheat sheet
-
-<a href="https://www.edureka.co/blog/wp-content/uploads/2018/10/Jenkins-Cheat-Sheet-Edureka.pdf">
-  <picture>
-    <source width="" media="(prefers-color-scheme: dark)" srcset="./Jenkins-Cheat-Sheet-Edureka-1.png">
-    <img width="" src="./Jenkins-Cheat-Sheet-Edureka-1.png">
-  </picture>
-</a>
-
-#### Xem thêm tại <a href="https://www.jenkins.io/user-handbook.pdf"> Jenkins User Handbook</a>
-
-<br />
-<br />
-<br />
-
-# Tìm hiểu thêm
+```
 
 ## Giới thiệu chung
 
