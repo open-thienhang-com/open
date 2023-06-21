@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
+
+    <!-- If you enabled Analytics in your project, add the Firebase SDK for Analytics -->
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-analytics.js"></script>
+
+    <!-- Add Firebase products that you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.css" />
+
+    <script>
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDANXKdWtcAK-VEB9XeKZMm5n_AO5s7nEA",
+            authDomain: "chungcu-4f64a.firebaseapp.com",
+            projectId: "chungcu-4f64a",
+            storageBucket: "chungcu-4f64a.appspot.com",
+            messagingSenderId: "381736103107",
+            appId: "1:381736103107:web:d64d67bb77545aab06c676",
+            measurementId: "G-XK5L2H17KW"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        var ui = new firebaseui.auth.AuthUI(firebase.auth());
+
+        let email = "thienhang@gmail.com"
+        let password = "12345678"
+        firebase.auth().signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            // Signed in 
+            var user = userCredential.user;
+            console.log(user.getIdToken())
+            console.log(userCredential)
+            
+        })
+        .catch((error) => {
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            console.log(error)
+        });
+        
+    </script>
+</body>
+</html> 

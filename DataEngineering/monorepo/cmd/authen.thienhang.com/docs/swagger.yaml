@@ -1,0 +1,499 @@
+basePath: /api/v1
+definitions:
+  entity.Address:
+    properties:
+      block:
+        type: string
+      building:
+        type: string
+      floor:
+        type: string
+      id:
+        type: string
+      website:
+        type: string
+    required:
+    - building
+    - id
+    type: object
+  entity.Award:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      time:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  entity.Building:
+    properties:
+      address:
+        description: becase can be "present"
+        type: string
+      addresses:
+        items:
+          $ref: '#/definitions/entity.Address'
+        type: array
+      created_at:
+        type: string
+      desctiption:
+        description: |-
+          Ward        primitive.ObjectID `bson:"ward" json:"ward"`
+          Province    primitive.ObjectID `bson:"province" json:"province"`
+          District    primitive.ObjectID `bson:"district" json:"district"`
+        type: string
+      icon:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      size:
+        type: integer
+      updated_at:
+        type: string
+      website:
+        type: string
+    required:
+    - id
+    type: object
+  entity.District:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      pre:
+        type: string
+      ward:
+        items:
+          $ref: '#/definitions/entity.Ward'
+        type: array
+    required:
+    - id
+    type: object
+  entity.Education:
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      from:
+        type: string
+      grade:
+        example: "0"
+        type: string
+      id:
+        type: string
+      major:
+        type: string
+      title:
+        type: string
+      to:
+        description: becase can be "present"
+        type: string
+      updated_at:
+        type: string
+    required:
+    - id
+    type: object
+  entity.Experience:
+    properties:
+      company:
+        type: string
+      created_at:
+        type: string
+      from:
+        type: string
+      id:
+        type: string
+      responsibility:
+        type: string
+      title:
+        type: string
+      to:
+        description: becase can be "present"
+        type: string
+      updated_at:
+        type: string
+    type: object
+  entity.Province:
+    properties:
+      code:
+        type: string
+      district:
+        items:
+          $ref: '#/definitions/entity.District'
+        type: array
+      id:
+        type: string
+      name:
+        type: string
+    required:
+    - id
+    type: object
+  entity.Qualification:
+    properties:
+      created_at:
+        type: string
+      expireAt:
+        type: string
+      id:
+        type: string
+      issueDate:
+        type: string
+      name:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  entity.Reference:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  entity.Skill:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      level:
+        description: from 1 to 5
+        type: integer
+      name:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  entity.User:
+    properties:
+      about:
+        type: string
+      address:
+        type: string
+      awards:
+        items:
+          $ref: '#/definitions/entity.Award'
+        type: array
+      courses:
+        items:
+          type: string
+        type: array
+      created_at:
+        type: string
+      dob:
+        type: string
+      educations:
+        items:
+          $ref: '#/definitions/entity.Education'
+        type: array
+      email:
+        type: string
+      experiences:
+        items:
+          $ref: '#/definitions/entity.Experience'
+        type: array
+      firstname:
+        type: string
+      gender:
+        type: string
+      id:
+        type: string
+      lastname:
+        type: string
+      lives_in:
+        items:
+          type: string
+        type: array
+      occupation:
+        type: string
+      pages:
+        items:
+          type: string
+        type: array
+      penalty:
+        items:
+          type: string
+        type: array
+      phone:
+        type: string
+      photo_url:
+        type: string
+      qualifications:
+        items:
+          $ref: '#/definitions/entity.Qualification'
+        type: array
+      references:
+        items:
+          $ref: '#/definitions/entity.Reference'
+        type: array
+      score:
+        items:
+          type: string
+        type: array
+      skills:
+        items:
+          $ref: '#/definitions/entity.Skill'
+        type: array
+      status:
+        type: string
+      updated_at:
+        type: string
+      usernames:
+        type: string
+      website:
+        type: string
+    required:
+    - email
+    type: object
+  entity.Ward:
+    properties:
+      building:
+        items:
+          $ref: '#/definitions/entity.Building'
+        type: array
+      id:
+        type: string
+      name:
+        type: string
+      pre:
+        type: string
+    required:
+    - id
+    type: object
+info:
+  contact:
+    email: me@thienhang.com
+    name: API Support
+    url: http://thienhang.com
+  description: This is a sample server Petstore server.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://thienhang.com
+  title: AUTHENTICATION OPEN API - thienhang.com
+  version: "1.0"
+paths:
+  /notify/email:
+    post:
+      consumes:
+      - application/json
+      description: get string by ID
+      parameters:
+      - description: With the bearer started
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.User'
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: Lấy thông tin của user, nếu không có thì đồng bộ từ firebase
+      tags:
+      - Users
+  /residential:
+    get:
+      consumes:
+      - application/json
+      description: get string by ID
+      parameters:
+      - description: string valid
+        in: query
+        maxLength: 30
+        minLength: 0
+        name: province
+        type: string
+      - description: string valid
+        in: query
+        maxLength: 30
+        minLength: 0
+        name: district
+        type: string
+      - description: string valid
+        in: query
+        maxLength: 30
+        minLength: 0
+        name: ward
+        type: string
+      - description: string valid
+        in: query
+        maxLength: 30
+        minLength: 0
+        name: building
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Province'
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      tags:
+      - Residential
+    post:
+      consumes:
+      - application/json
+      description: get string by ID
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Address'
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: Lấy thông tin của user, nếu không có thì đồng bộ từ firebase
+      tags:
+      - Residential
+    put:
+      consumes:
+      - application/json
+      description: get string by ID
+      parameters:
+      - description: Add InputCreateListener
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/entity.Address'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Address'
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: Cập nhật thông tin cho người dùng
+      tags:
+      - Residential
+  /residential/address:
+    get:
+      consumes:
+      - application/json
+      description: get string by ID
+      parameters:
+      - description: UUID
+        in: path
+        name: uuid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Address'
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      tags:
+      - Residential
+  /user:
+    post:
+      consumes:
+      - application/json
+      description: get string by ID
+      parameters:
+      - description: With the bearer started
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.User'
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: Lấy thông tin của user, nếu không có thì đồng bộ từ firebase
+      tags:
+      - Users
+    put:
+      consumes:
+      - application/json
+      description: get string by ID
+      parameters:
+      - description: Điền token firebase
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Add InputCreateListener
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/entity.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.User'
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: Cập nhật thông tin cho người dùng
+      tags:
+      - Users
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: OpenKey
+    type: apiKey
+swagger: "2.0"

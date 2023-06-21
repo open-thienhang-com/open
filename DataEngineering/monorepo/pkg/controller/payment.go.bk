@@ -1,0 +1,346 @@
+package controller
+
+import (
+	"context"
+	"fmt"
+	"net/http"
+	"strconv"
+	"strings"
+	"time"
+
+	"api_thienhang_com/pkg/api"
+	"api_thienhang_com/pkg/gocqrs/invoice"
+	log "github.com/sirupsen/logrus"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+
+	notify "api_thienhang_com/pkg/firebase"
+	"api_thienhang_com/pkg/payment"
+)
+
+// @Summary
+// @Schemes
+// @Description Tạo yêu cầu thanh toán đơn hàng (Hiện tại chỉ hỗ trợ momo & onepay)
+// @Description Create Deposit Invoice
+// @Description *Lưu ý cần replace kì tự \u0026 thành & ở kết quả trả về
+// @Param method query string false "Payment Method - Phương thức thanh toán ( Điền momo, zalopay, nganluong, onepay)"
+// @Param amount query string false "Amount - Số tiền cần thanh toán. Ví dụ: 10000"
+// @Param Authorization header string true "Token lấy từ API authen có prefix Token"
+// @Tags Payment Method
+// @Accept json
+// @Produce json
+// @Success 200 object utils.Response
+// @Failure 400 object utils.Response
+// @Router  /payment/deposit [get]
+type Tdiscount struct {
+	Code           string `bson:"code"`
+	OriginalAmount int    `bson:"original_amount"`
+	ReducedAmount  int    `bson:"reduced_amount"`
+}
+
+func (c *Controller) deposit(w http.ResponseWriter, r *http.Request) {
+	//
+	token := r.Header.Get("Authorization")
+	if token == "" {
+		utils.ResponseWithJson(w, http.StatusForbidden, utils.Err_STRING_TOKEN)
+		return
+	}
+	//
+	uuid, fbToken, err := api.GetID(token)
+	if err != nil {
+		log.Error(err)
+		utils.ResponseWithJson(w, http.StatusForbidden, utils.Err_STRING_TOKEN)
+		return
+	}
+	//
+	mt := r.URL.Query().Get("method")
+	if mt == "" {
+		utils.ResponseWithJson(w, http.StatusBadRequest, utils.Err_STRING_METHOD)
+		return
+	}
+
+	am, err := strconv.Atoi(r.URL.Query().Get("amount"))
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusBadRequest, utils.Err_STRING_RANGE_DEPOSIT)
+		return
+	}
+
+	discount := r.URL.Query().Get("discount")
+
+	re := am % 10000
+	log.Warn(re)
+	if (re > 0 || am < 50000) && (discount == "") {
+		utils.ResponseWithJson(w, http.StatusBadRequest, utils.Err_STRING_RANGE_DEPOSIT)
+		return
+	}
+
+	dam := strconv.Itoa(am)
+	if discount != "" {
+		client, err := mongo.NewClient(options.Client().ApplyURI("mongodb+srv://hung:hung123@cluster0.m9bsu.mongodb.net/test?authSource=admin&replicaSet=atlas-dg6r6k-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true"))
+		// if err != nil {
+		// 	log.Fatal(err)
+		// }
+		ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+		err = client.Connect(ctx)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer client.Disconnect(ctx)
+		databases, err := client.ListDatabaseNames(ctx, bson.M{})
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(databases)
+		SCDatabase := client.Database("sandexcare")
+		discountcls := SCDatabase.Collection("discount")
+		// episodesCollection := quickstartDatabase.Collection("episodes")
+
+		filter := bson.M{"code": strings.ToUpper(discount)}
+
+		var result *Tdiscount
+		res := discountcls.FindOne(context.Background(), filter).Decode(&result)
+		if res == nil {
+			// s := result.Events[0].RawData.String()
+			// var ndata *Edata
+			// json.Unmarshal([]byte(s), &ndata)
+			// dam, err := strconv.Atoi(ndata.DepositAmount)
+			// fmt.Println("result a", dam)
+			// if discount == "HOA123" {
+			am = result.ReducedAmount
+			dam = strconv.Itoa(result.OriginalAmount)
+			// }
+		}
+
+	}
+
+	// *********************************************
+	invoiceID := utils.GenerateUUID()
+	var p payment.IPayment
+	switch mt {
+	case METHOD_MOMO:
+		p = payment.CreateMomo(invoiceID, strconv.Itoa(am))
+	case METHOD_ZALO:
+		p = payment.CreateZalo(invoiceID, strconv.Itoa(am))
+	case METHOD_ONEPAY:
+		ip, err := utils.GetIP(r)
+		if err != nil {
+			utils.ResponseWithJson(w, http.StatusBadRequest, utils.Err_STRING_METHOD)
+		}
+		p = payment.CreateOnePay(invoiceID, strconv.Itoa(am*100), ip)
+	default:
+		utils.ResponseWithJson(w, http.StatusBadRequest, utils.Err_STRING_METHOD)
+		return
+	}
+
+	//
+	var invoice invoice.CreateInvoice
+	invoice.AggregateID = p.GetInvoiceID()
+	invoice.CreatedBy = uuid
+	invoice.CreatedFB = fbToken
+	invoice.Method = mt
+	invoice.Amount = am
+	invoice.Discount = discount
+	invoice.DepositAmount = dam
+	// if err != nil {
+	// 	utils.ResponseWithJson(w, http.StatusBadRequest, utils.Err_ABNORMAL)
+	// 	return
+	// }
+	c.cmd.HandleCommand(invoice)
+	//c.report.AddRecord(invoiceID, id, fmt.Sprint(mt), fmt.Sprint(am))
+
+	var result interface{}
+	result, err = p.CaptureWallet()
+	log.Warn(result)
+	if err != nil {
+		go notify.SendDepositError(fmt.Sprint(am))
+		utils.ResponseWithJson(w, http.StatusBadRequest, "Thanh toán chưa thành công: "+err.Error())
+		return
+	}
+
+	utils.ResponseWithJson(w, http.StatusOK, result)
+}
+
+// @Summary
+// @Schemes
+// @Description API sử dụng cho đối tác momo, onepay, zalopay (TODO: Add white list)
+// @Description IPN
+// @Tags IPN (Sử dụng cho đối tác)
+// @Param        IPN  body  payment.MomoIPN  true  "Callback"
+// @Accept json
+// @Produce json
+// @Success 200 object utils.Response
+// @Failure 400 object utils.Response
+// @Router  /ipn/momo [post]
+func (c *Controller) ipnMomo(w http.ResponseWriter, r *http.Request) {
+	log.Error(r)
+	amount, invoiceID, err := payment.CheckSignatureMoMo(r)
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusBadRequest, nil)
+		return
+	}
+	//
+	var deposit invoice.PerformDeposit
+	deposit.Status = http.StatusOK
+	deposit.Amount = amount
+	deposit.AggregateID = invoiceID
+	deposit.Version = 1
+	c.cmd.HandleCommand(deposit)
+	//
+	utils.ResponseWithJson(w, http.StatusNoContent, nil)
+}
+
+// @Summary
+// @Schemes
+// @Description API sử dụng cho đối tác momo, onepay, zalopay (TODO: Add white list)
+// @Description IPN
+// @Tags IPN (Sử dụng cho đối tác)
+// @Param        IPN  body  payment.MomoIPN  true  "Callback"
+// @Accept json
+// @Produce json
+// @Success 200 object utils.Response
+// @Failure 400 object utils.Response
+// @Router  /ipn/momo [post]
+func (c *Controller) ipnZaloPay(w http.ResponseWriter, r *http.Request) {
+	log.Error(r)
+	amount, invoiceID, err := payment.CheckSignatureZalo(r)
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusBadRequest, nil)
+		return
+	}
+	//
+	var deposit invoice.PerformDeposit
+	deposit.Status = http.StatusOK
+	deposit.Amount = amount
+	deposit.AggregateID = invoiceID
+	deposit.Version = 1
+	c.cmd.HandleCommand(deposit)
+	//
+	result := make(map[string]interface{})
+	if err != nil {
+		// callback không hợp lệ
+		result["return_code"] = -1
+		result["return_message"] = "mac not equal"
+	} else {
+		result["return_code"] = 1
+		result["return_message"] = "success"
+	}
+	utils.ResponseWithJson(w, http.StatusNoContent, nil)
+}
+
+// @Summary
+// @Schemes
+// @Description API sử dụng cho app show status thanh toán
+// @Description IPN
+// @Accept json
+// @Produce json
+// @Success 200 object utils.Response
+// @Failure 400 object utils.Response
+// @Router  /ipn/onepay [get]
+func (c *Controller) ipnOnePay(w http.ResponseWriter, r *http.Request) {
+	//
+	amount, invoiceID, err := payment.CheckSignatureOnePay(r)
+	if err != nil {
+		log.Error(err)
+		// utils.ResponseWithJson(w, http.StatusBadRequest, err.Error())
+		utils.ResponseWithJsonPaymentFail(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	//
+	deposit := invoice.PerformDeposit{}
+
+	deposit.Status = http.StatusOK
+	deposit.Amount = amount / 100
+	deposit.AggregateID = invoiceID
+	deposit.Version = 1
+	log.Warn("[IPN ONEPAY] Cập nhật đơn hàng: " + invoiceID + " Thanh toán: " + fmt.Sprint(amount) + " chi tiết:" + fmt.Sprint(deposit))
+
+	c.cmd.HandleCommand(deposit)
+	// utils.ResponseWithJson(w, http.StatusOK, fmt.Sprint(deposit.Amount))
+	utils.ResponseWithJsonPaymentSuccess(w, http.StatusOK, "Thanh toán thành công!"+fmt.Sprint(deposit.Amount))
+}
+
+// @Summary
+// @Schemes
+// @Description API sử dụng cho đối tác onepay check, zalopay (TODO: Add white list)
+// @Description IPN
+// @Tags IPN (Sử dụng cho đối tác)
+// @Accept json
+// @Produce json
+// @Success 200 object utils.Response
+// @Failure 400 object utils.Response
+// @Router  /ipn/partner/onepay [get]
+func (c *Controller) ipnOnePayPartner(w http.ResponseWriter, r *http.Request) {
+	amount, _, err := payment.CheckSignatureOnePay(r)
+	if amount > 0 {
+		utils.ResponseWithJson(w, http.StatusOK, "responsecode=1&desc=confirm-success")
+		return
+	}
+	if amount == -1 {
+		utils.ResponseWithJson(w, http.StatusOK, "responsecode=0&desc=received-and-valid-hash")
+		return
+	}
+	if amount == 0 {
+		utils.ResponseWithJson(w, http.StatusOK, "responsecode=0&desc=received")
+		return
+	}
+	utils.ResponseWithJson(w, http.StatusBadRequest, err.Error())
+}
+
+// @Summary
+// @Schemes
+// @Description Tạo yêu cầu thanh toán kim cương (CHƯA XONG)
+// @Description Create Withdrawl Invoice
+// @Param amount query string false "Số tiền muốn nạp"
+// @Param Authorization header string true "Token lấy từ API authen"
+// @Tags Payment Method
+// @Accept json
+// @Produce json
+// @Success 200 object utils.Response
+// @Failure 400 object utils.Response
+// @Router  /payment/withdrawl [get]
+func (c *Controller) withdrawl(w http.ResponseWriter, r *http.Request) {
+	am, err := strconv.Atoi(r.URL.Query().Get("amount"))
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusBadRequest, "Vui lòng kiểm tra số tiền (amount)")
+		return
+	}
+	re := am % 10000
+	log.Warn(re)
+	if re > 0 && am < 50000 {
+		utils.ResponseWithJson(w, http.StatusBadRequest, "Số tiền (amount) phải lớn hơn hoặc bằng 50.000 đồng và là bội số của 10.000")
+		return
+	}
+	//
+	token := r.Header.Get("Authorization")
+	if token == "" {
+		utils.ResponseWithJson(w, http.StatusForbidden, "Bạn không có quyền truy cập. Vui lòng liên hệ ")
+		return
+	}
+	// id, err := api.GetID(token)
+	// if err != nil {
+	// 	utils.ResponseWithJson(w, http.StatusForbidden, err.Error())
+	// 	return
+	// }
+	//
+	//invoiceID := utils.GenerateUUID()
+
+	utils.ResponseWithJson(w, http.StatusOK, nil)
+}
+
+// @Summary
+// @Schemes
+// @Description Kiểm tra mã giảm giá
+// @Description Promotion
+// @Param amount query string false "Số tiền muốn nạp"
+// @Param Authorization header string true "Token lấy từ API authen"
+// @Tags Payment Method
+// @Accept json
+// @Produce json
+// @Success 200 object utils.Response
+// @Failure 400 object utils.Response
+// @Router  /payment/promotion [get]
+func (c *Controller) promotion(w http.ResponseWriter, r *http.Request) {
+
+}

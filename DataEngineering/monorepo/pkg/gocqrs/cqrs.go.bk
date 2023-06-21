@@ -1,0 +1,80 @@
+package gocqrs
+
+import (
+	"api_thienhang_com/pkg/gocqrs/base/aggregate"
+	"api_thienhang_com/pkg/gocqrs/base/command"
+	"api_thienhang_com/pkg/gocqrs/base/event"
+	"api_thienhang_com/pkg/gocqrs/base/repository"
+	// "github.com/mishudark/eventhus/eventbus/nats"
+	"go.mongodb.org/mongo-driver/mongo"
+	// "api_thienhang_com/pkg/gocqrs/mongo"
+	// "api_thienhang_com/pkg/gocqrs/nats"
+	//"github.com/mishudark/eventhus/eventstore/mongo"
+)
+
+// EventBus returns an eventhus.EventBus impl
+type EventBus func() (event.EventBus, error)
+
+// EventStore returns an eventhus.EventStore impl
+type EventStore func() (event.EventStore, error)
+
+// CommandBus returns an eventhus.CommandBus
+type CommandBus func(register command.CommandHandlerRegister) (command.CommandBus, error)
+
+// CommandConfig should connect internally commands with an aggregate
+type CommandConfig func(repository *repository.Repository, register *command.CommandRegister)
+
+// commandHandler is the signature used by command handlers constructor
+type commandHandler func(repository *repository.Repository, aggregate aggregate.AggregateHandler) command.CommandHandle
+
+// WireCommands acts as a wired between aggregate, register and commands
+func WireCommands(aggregate aggregate.AggregateHandler, handler commandHandler, commands ...interface{}) CommandConfig {
+	return func(repository *repository.Repository, register *command.CommandRegister) {
+		h := handler(repository, aggregate)
+		for _, command := range commands {
+			register.Add(command, h)
+		}
+	}
+}
+
+// NewClient returns a command bus properly configured
+func NewClient(es EventStore, eb EventBus, cb CommandBus, cmdConfigs ...CommandConfig) (command.CommandBus, error) {
+	store, err := es()
+	if err != nil {
+		return nil, err
+	}
+
+	bus, err := eb()
+	if err != nil {
+		return nil, err
+	}
+
+	repository := repository.NewRepository(store, bus)
+	register := command.NewCommandRegister()
+
+	for _, conf := range cmdConfigs {
+		conf(repository, register)
+	}
+	return cb(register)
+}
+
+// Mongo generates a MongoDB implementation of EventStore
+func Mongo(host string, port int, db string) EventStore {
+	return func() (event.EventStore, error) {
+		return mongo.NewClient(host, port, db)
+	}
+}
+
+// Nats generates a Nats implementation of EventBus
+func Nats(urls string, useTLS bool) EventBus {
+	return func() (event.EventBus, error) {
+		return nats.NewClient(urls, useTLS)
+	}
+}
+
+// AsyncCommandBus generates a CommandBus
+func AsyncCommandBus(workers int) CommandBus {
+	return func(register command.CommandHandlerRegister) (command.CommandBus, error) {
+		return command.NewBus(register, workers), nil
+	}
+}

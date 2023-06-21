@@ -1,0 +1,408 @@
+// EDUCATION
+func (c *Controller) AddEducation(w http.ResponseWriter, r *http.Request) {
+	// Get account information from google
+	account, err := c.getAccount(r)
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusForbidden, err.Error())
+		return
+	}
+
+	var u entity.User
+	if err := json.NewDecoder(r.Body).Decode(&u); err != nil {
+		log.Error("err", err)
+		utils.ResponseWithJson(w, http.StatusBadRequest, map[string]string{"message": "Invalid body"})
+		return
+	}
+
+	err = c.service.AddEducation(account, u.Educations)
+	if err != nil {
+		log.Error(err)
+		utils.ResponseWithJson(w, http.StatusBadRequest, "Cannot update~")
+		return
+	}
+	utils.ResponseWithJson(w, http.StatusOK, nil)
+}
+func (c *Controller) UpdateEducation(w http.ResponseWriter, r *http.Request) {
+	// Get account information from google
+	account, err := c.getAccount(r)
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusForbidden, err.Error())
+		return
+	}
+
+	var e entity.Education
+	if err := json.NewDecoder(r.Body).Decode(&e); err != nil {
+		log.Error("err", err)
+		utils.ResponseWithJson(w, http.StatusBadRequest, map[string]string{"message": "Invalid body"})
+		return
+	}
+
+	err = c.service.UpdateEducation(account, e)
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusBadRequest, "Cannot update~")
+		return
+	}
+	utils.ResponseWithJson(w, http.StatusOK, nil)
+}
+func (c *Controller) DeleteEducation(w http.ResponseWriter, r *http.Request) {
+	// Get account information from google
+	account, err := c.getAccount(r)
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusForbidden, err.Error())
+		return
+	}
+
+	var e entity.Education
+	if err := json.NewDecoder(r.Body).Decode(&e); err != nil {
+		log.Error("err", err)
+		utils.ResponseWithJson(w, http.StatusBadRequest, map[string]string{"message": "Invalid body"})
+		return
+	}
+
+	err = c.service.DeleteEducation(account, e)
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusBadRequest, "Cannot update~")
+		return
+	}
+	utils.ResponseWithJson(w, http.StatusOK, nil)
+}
+
+// EXPERIENCE
+func (c *Controller) AddExperience(w http.ResponseWriter, r *http.Request) {
+	// Get account information from google
+	account, err := c.getAccount(r)
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusForbidden, err.Error())
+		return
+	}
+
+	var u entity.User
+	if err := json.NewDecoder(r.Body).Decode(&u); err != nil {
+		log.Error("err", err)
+		utils.ResponseWithJson(w, http.StatusBadRequest, map[string]string{"message": "Invalid body"})
+		return
+	}
+
+	err = c.service.AddExperience(account, u.Experiences)
+	if err != nil {
+		log.Error(err)
+		utils.ResponseWithJson(w, http.StatusBadRequest, "Cannot update~")
+		return
+	}
+	utils.ResponseWithJson(w, http.StatusOK, nil)
+}
+func (c *Controller) UpdateExperience(w http.ResponseWriter, r *http.Request) {
+	// Get account information from google
+	account, err := c.getAccount(r)
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusForbidden, err.Error())
+		return
+	}
+
+	var e entity.Experience
+	if err := json.NewDecoder(r.Body).Decode(&e); err != nil {
+		log.Error("err", err)
+		utils.ResponseWithJson(w, http.StatusBadRequest, map[string]string{"message": "Invalid body"})
+		return
+	}
+
+	err = c.service.UpdateExperience(account, e)
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusBadRequest, "Cannot update~")
+		return
+	}
+	utils.ResponseWithJson(w, http.StatusOK, nil)
+}
+func (c *Controller) DeleteExperience(w http.ResponseWriter, r *http.Request) {
+	// Get account information from google
+	account, err := c.getAccount(r)
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusForbidden, err.Error())
+		return
+	}
+
+	var e entity.Experience
+	if err := json.NewDecoder(r.Body).Decode(&e); err != nil {
+		log.Error("err", err)
+		utils.ResponseWithJson(w, http.StatusBadRequest, map[string]string{"message": "Invalid body"})
+		return
+	}
+
+	err = c.service.DeleteExperience(account, e)
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusBadRequest, "Cannot update~")
+		return
+	}
+	utils.ResponseWithJson(w, http.StatusOK, nil)
+}
+
+// SKILL
+func (c *Controller) AddSkill(w http.ResponseWriter, r *http.Request) {
+	// Get account information from google
+	account, err := c.getAccount(r)
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusForbidden, err.Error())
+		return
+	}
+
+	var u entity.User
+	if err := json.NewDecoder(r.Body).Decode(&u); err != nil {
+		log.Error("err", err)
+		utils.ResponseWithJson(w, http.StatusBadRequest, map[string]string{"message": "Invalid body"})
+		return
+	}
+
+	err = c.service.AddSkill(account, u.Skills)
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusBadRequest, "Cannot update~")
+	}
+	utils.ResponseWithJson(w, http.StatusOK, nil)
+}
+func (c *Controller) UpdateSkill(w http.ResponseWriter, r *http.Request) {
+	// Get account information from google
+	account, err := c.getAccount(r)
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusForbidden, err.Error())
+		return
+	}
+
+	var e entity.Skill
+	if err := json.NewDecoder(r.Body).Decode(&e); err != nil {
+		log.Error("err", err)
+		utils.ResponseWithJson(w, http.StatusBadRequest, map[string]string{"message": "Invalid body"})
+		return
+	}
+
+	err = c.service.UpdateSkill(account, e)
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusBadRequest, "Cannot update~")
+		return
+	}
+	utils.ResponseWithJson(w, http.StatusOK, nil)
+}
+func (c *Controller) DeleteSkill(w http.ResponseWriter, r *http.Request) {
+	// Get account information from google
+	account, err := c.getAccount(r)
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusForbidden, err.Error())
+		return
+	}
+
+	var e entity.Skill
+	if err := json.NewDecoder(r.Body).Decode(&e); err != nil {
+		log.Error("err", err)
+		utils.ResponseWithJson(w, http.StatusBadRequest, map[string]string{"message": "Invalid body"})
+		return
+	}
+
+	err = c.service.DeleteSkill(account, e)
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusBadRequest, "Cannot update~")
+		return
+	}
+	utils.ResponseWithJson(w, http.StatusOK, nil)
+}
+
+// REFERENCE
+func (c *Controller) AddReference(w http.ResponseWriter, r *http.Request) {
+	// Get account information from google
+	account, err := c.getAccount(r)
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusForbidden, err.Error())
+		return
+	}
+
+	var u entity.User
+	if err := json.NewDecoder(r.Body).Decode(&u); err != nil {
+		log.Error("err", err)
+		utils.ResponseWithJson(w, http.StatusBadRequest, map[string]string{"message": "Invalid body"})
+		return
+	}
+
+	err = c.service.AddReference(account, u.References)
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusBadRequest, "Cannot update~")
+		return
+	}
+	utils.ResponseWithJson(w, http.StatusOK, nil)
+}
+func (c *Controller) UpdateReference(w http.ResponseWriter, r *http.Request) {
+	// Get account information from google
+	account, err := c.getAccount(r)
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusForbidden, err.Error())
+		return
+	}
+
+	var e entity.Reference
+	if err := json.NewDecoder(r.Body).Decode(&e); err != nil {
+		log.Error("err", err)
+		utils.ResponseWithJson(w, http.StatusBadRequest, map[string]string{"message": "Invalid body"})
+		return
+	}
+
+	err = c.service.UpdateReference(account, e)
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusBadRequest, "Cannot update~")
+		return
+	}
+	utils.ResponseWithJson(w, http.StatusOK, nil)
+}
+func (c *Controller) DeleteReference(w http.ResponseWriter, r *http.Request) {
+	// Get account information from google
+	account, err := c.getAccount(r)
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusForbidden, err.Error())
+		return
+	}
+
+	var e entity.Reference
+	if err := json.NewDecoder(r.Body).Decode(&e); err != nil {
+		log.Error("err", err)
+		utils.ResponseWithJson(w, http.StatusBadRequest, map[string]string{"message": "Invalid body"})
+		return
+	}
+
+	err = c.service.DeleteReference(account, e)
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusBadRequest, "Cannot update~")
+		return
+	}
+	utils.ResponseWithJson(w, http.StatusOK, nil)
+}
+
+// AWARD
+func (c *Controller) AddAward(w http.ResponseWriter, r *http.Request) {
+	// Get account information from google
+	account, err := c.getAccount(r)
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusForbidden, err.Error())
+		return
+	}
+
+	var u entity.User
+	if err := json.NewDecoder(r.Body).Decode(&u); err != nil {
+		log.Error("err", err)
+		utils.ResponseWithJson(w, http.StatusBadRequest, map[string]string{"message": "Invalid body"})
+		return
+	}
+
+	err = c.service.AddAward(account, u.Awards)
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusBadRequest, "Cannot update~")
+		return
+	}
+	utils.ResponseWithJson(w, http.StatusOK, nil)
+}
+func (c *Controller) UpdateAward(w http.ResponseWriter, r *http.Request) {
+	// Get account information from google
+	account, err := c.getAccount(r)
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusForbidden, err.Error())
+		return
+	}
+
+	var e entity.Award
+	if err := json.NewDecoder(r.Body).Decode(&e); err != nil {
+		log.Error("err", err)
+		utils.ResponseWithJson(w, http.StatusBadRequest, map[string]string{"message": "Invalid body"})
+		return
+	}
+
+	err = c.service.UpdateAward(account, e)
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusBadRequest, "Cannot update~")
+		return
+	}
+	utils.ResponseWithJson(w, http.StatusOK, nil)
+}
+func (c *Controller) DeleteAward(w http.ResponseWriter, r *http.Request) {
+	// Get account information from google
+	account, err := c.getAccount(r)
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusForbidden, err.Error())
+		return
+	}
+
+	var e entity.Award
+	if err := json.NewDecoder(r.Body).Decode(&e); err != nil {
+		log.Error("err", err)
+		utils.ResponseWithJson(w, http.StatusBadRequest, map[string]string{"message": "Invalid body"})
+		return
+	}
+
+	err = c.service.DeleteAward(account, e)
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusBadRequest, "Cannot update~")
+		return
+	}
+	utils.ResponseWithJson(w, http.StatusOK, nil)
+}
+
+// QUALIFICATION
+func (c *Controller) AddQualification(w http.ResponseWriter, r *http.Request) {
+	// Get account information from google
+	account, err := c.getAccount(r)
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusForbidden, err.Error())
+		return
+	}
+
+	var u entity.User
+	if err := json.NewDecoder(r.Body).Decode(&u); err != nil {
+		log.Error("err", err)
+		utils.ResponseWithJson(w, http.StatusBadRequest, map[string]string{"message": "Invalid body"})
+		return
+	}
+
+	err = c.service.AddQualification(account, u.Qualifications)
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusBadRequest, "Cannot update~")
+		return
+	}
+	utils.ResponseWithJson(w, http.StatusOK, nil)
+}
+func (c *Controller) UpdateQualification(w http.ResponseWriter, r *http.Request) {
+	// Get account information from google
+	account, err := c.getAccount(r)
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusForbidden, err.Error())
+		return
+	}
+
+	var e entity.Qualification
+	if err := json.NewDecoder(r.Body).Decode(&e); err != nil {
+		log.Error("err", err)
+		utils.ResponseWithJson(w, http.StatusBadRequest, map[string]string{"message": "Invalid body"})
+		return
+	}
+
+	err = c.service.UpdateQualification(account, e)
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusBadRequest, "Cannot update~")
+		return
+	}
+	utils.ResponseWithJson(w, http.StatusOK, nil)
+}
+func (c *Controller) DeleteQualification(w http.ResponseWriter, r *http.Request) {
+	// Get account information from google
+	account, err := c.getAccount(r)
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusForbidden, err.Error())
+		return
+	}
+
+	var e entity.Qualification
+	if err := json.NewDecoder(r.Body).Decode(&e); err != nil {
+		log.Error("err", err)
+		utils.ResponseWithJson(w, http.StatusBadRequest, map[string]string{"message": "Invalid body"})
+		return
+	}
+
+	err = c.service.DeleteQualification(account, e)
+	if err != nil {
+		utils.ResponseWithJson(w, http.StatusBadRequest, "Cannot update~")
+		return
+	}
+	utils.ResponseWithJson(w, http.StatusOK, nil)
+}

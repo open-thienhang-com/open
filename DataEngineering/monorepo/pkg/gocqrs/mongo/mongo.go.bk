@@ -1,0 +1,272 @@
+package mongo
+
+import (
+	"context"
+	"encoding/json"
+	"errors"
+	"fmt"
+	_ "fmt"
+	"strconv"
+	"time"
+
+	notify "api_thienhang_com/pkg/firebase"
+	"api_thienhang_com/pkg/gocqrs/base/event"
+	"api_thienhang_com/pkg/gocqrs/invoice"
+	"api_thienhang_com/pkg/telegram"
+	"api_thienhang_com/pkg/websocket"
+	log "github.com/sirupsen/logrus"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/writeconcern"
+)
+
+// AggregateDB defines the collection to store the aggregate with their events
+type AggregateDB struct {
+	ID        string    `bson:"_id"`
+	Version   int       `bson:"version"`
+	Events    []EventDB `bson:"events"`
+	CreatedAt time.Time `bson:"created_at"`
+	CreatedBy string    `bson:"created_by"`
+	CreatedFB string    `bson:"created_fb"`
+}
+
+// EventDB defines the structure of the events to be stored
+type EventDB struct {
+	Type          string      `bson:"event_type"`
+	AggregateID   string      `bson:"_id"`
+	RawData       bson.Raw    `bson:"data,omitempty"`
+	data          interface{} `bson:"-"`
+	Timestamp     time.Time   `bson:"timestamp"`
+	AggregateType string      `bson:"aggregate_type"`
+	Version       int         `bson:"version"`
+}
+
+type Edata struct {
+	Method        string `bson:"method"`
+	Amount        int    `bson:"amount"`
+	Discount      string `bson:"discount"`
+	DepositAmount string `bson:"depositamount"`
+}
+
+// Client for access to mongodb
+type Client struct {
+	client *mongo.Client
+	ctx    context.Context
+	//
+	invoice *mongo.Collection
+	//
+	users *mongo.Collection
+	//
+	discount *mongo.Collection
+	//
+	ws *websocket.Socket
+}
+
+// NewClient generates a new client to access to mongodb
+func NewClient(host string, port int, db string) (event.EventStore, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	// Connect to Mongo
+	// Example of causal consistency:
+	//https://stackoverflow.com/questions/55706317/setting-consistency-rules-to-monotonic-for-a-session-with-the-official-mongo-go
+	opts := options.Client().ApplyURI(host)
+	client, err := mongo.Connect(ctx, opts)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	database := client.Database(db)
+
+	wcMajority := writeconcern.New(writeconcern.WMajority(), writeconcern.WTimeout(1*time.Second))
+	wcMajorityCollectionOpts := options.Collection().SetWriteConcern(wcMajority)
+
+	//
+	invoice := database.Collection("invoice", wcMajorityCollectionOpts)
+	users := database.Collection("users", wcMajorityCollectionOpts)
+	discount := database.Collection("discount", wcMajorityCollectionOpts)
+	//ws := websocket.New(os.Getenv("WEBSOCKET_TOKEN"))
+	cli := &Client{
+		client,
+		ctx,
+		invoice,
+		users,
+		discount,
+		//ws,
+		nil,
+	}
+	return cli, nil
+}
+
+func (c *Client) save(events []event.Event, version int, safe bool) error {
+	if len(events) == 0 {
+		return nil
+	}
+
+	// Build all event records, with incrementing versions starting from the
+	// original aggregate version.
+	eventsDB := make([]EventDB, len(events))
+	aggregateID := events[0].AggregateID
+	for i, event := range events {
+
+		// Create the event record with timestamp.
+		eventsDB[i] = EventDB{
+			Type:          event.Type,
+			AggregateID:   event.AggregateID,
+			Timestamp:     time.Now(),
+			AggregateType: event.AggregateType,
+			Version:       1 + version + i,
+		}
+
+		// Marshal event data if there is any.
+		if event.Data != nil {
+			rawData, err := bson.Marshal(event.Data)
+			if err != nil {
+				telegram.SendErrorInvoice(aggregateID, " LỖI: "+err.Error())
+				return err
+			}
+			eventsDB[i].RawData = rawData
+		}
+	}
+	if version == 0 {
+		createdBy := events[0].CreatedBy
+		createdFB := events[0].CreatedFB
+		aggregate := AggregateDB{
+			ID:        aggregateID,
+			Version:   len(eventsDB),
+			Events:    eventsDB,
+			CreatedAt: time.Now(),
+			CreatedBy: createdBy,
+			CreatedFB: createdFB,
+		}
+
+		result, err := c.invoice.InsertOne(context.Background(), aggregate)
+		log.Warn(result)
+		if err != nil {
+			return err
+		}
+		telegram.SendCreateInvoice(aggregateID, createdBy)
+	} else {
+		query := bson.M{"_id": aggregateID}
+		if !safe {
+			query["version"] = version
+		}
+
+		rInvoice := c.invoice.FindOneAndUpdate(
+			context.Background(),
+			query,
+			bson.M{
+				"$push": bson.M{"events": bson.M{"$each": eventsDB}},
+				"$inc":  bson.M{"version": len(eventsDB)},
+			},
+		)
+
+		var temp map[string]interface{}
+
+		err := rInvoice.Decode(&temp)
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+		log.Error(temp)
+		//
+		if a, ok := events[0].Data.(*invoice.DepositPerformed); ok {
+			am := a.Amount
+			// am := a.DepositAmount
+			//
+			objectId, err := primitive.ObjectIDFromHex(temp["created_by"].(string))
+			if err != nil {
+				log.Error(err)
+				//telegram.SendErrorInvoice(aggregateID, +" LỖI Cập nhật: "+err.Error())
+				return err
+			}
+
+			filter := bson.M{"_id": aggregateID}
+
+			var result *AggregateDB
+			res := c.invoice.FindOne(context.Background(), filter).Decode(&result)
+
+			if res == nil {
+				// return events, errors.New("no record")
+				s := result.Events[0].RawData.String()
+				var ndata *Edata
+				json.Unmarshal([]byte(s), &ndata)
+				am, _ = strconv.Atoi(ndata.DepositAmount)
+			}
+
+			_, err = c.users.UpdateOne(
+				context.Background(),
+				bson.M{"_id": objectId},
+				bson.M{
+					"$inc": bson.M{"diamond": am},
+				},
+			)
+
+			if err != nil {
+				telegram.SendErrorInvoice(aggregateID, " LỖI: "+err.Error())
+			}
+			if temp["created_fb"] != nil {
+				go telegram.SendDepositInvoice(aggregateID, temp["created_fb"].(string), fmt.Sprint(am))
+				go notify.SendDepositSuccess(fmt.Sprint(am), temp["created_fb"].(string))
+			}
+
+			//go c.ws.SendSuccess(aggregateID, "payment.sandexcare.com", fmt.Sprint(am))
+		}
+
+	}
+	return nil
+}
+
+// SafeSave store the events without check the current version
+func (c *Client) SafeSave(events []event.Event, version int) error {
+	return c.save(events, version, true)
+}
+
+// Save the events ensuring the current version
+func (c *Client) Save(events []event.Event, version int) error {
+	return c.save(events, version, false)
+}
+
+// Load the stored events for an AggregateID
+func (c *Client) Load(aggregateID string) ([]event.Event, error) {
+	var events []event.Event
+	filter := bson.M{"_id": aggregateID}
+
+	var aggregate *AggregateDB
+	err := c.invoice.FindOne(context.Background(), filter).Decode(&aggregate)
+	if err != nil {
+		return events, errors.New("no record")
+	}
+
+	events = make([]event.Event, len(aggregate.Events))
+	register := event.NewEventRegister()
+
+	for i, dbEvent := range aggregate.Events {
+		// Create an event of the correct type.
+		dataType, err := register.Get(dbEvent.Type)
+		if err != nil {
+			return events, err
+		}
+
+		// Manually decode the raw BSON event.
+		if err := bson.Unmarshal(dbEvent.RawData, dataType); err != nil {
+			return events, err
+		}
+
+		// Set conrcete event and zero out the decoded event.
+		dbEvent.data = dataType
+		dbEvent.RawData = bson.Raw{}
+
+		// Translate dbEvent to eventhus.Event
+		events[i] = event.Event{
+			AggregateID:   aggregateID,
+			AggregateType: dbEvent.AggregateType,
+			Version:       dbEvent.Version,
+			Type:          dbEvent.Type,
+			Data:          dbEvent.data,
+		}
+	}
+
+	return events, nil
+}

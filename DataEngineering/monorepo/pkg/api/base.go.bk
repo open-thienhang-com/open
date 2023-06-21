@@ -1,0 +1,93 @@
+package api
+
+import (
+	"bytes"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"net/http"
+	"time"
+
+	log "github.com/sirupsen/logrus"
+)
+
+const (
+	GET_INFO = "https://api.sandexcare.com/api/v1/user/info"
+)
+
+func callAPI(token string, aType, url string, bodyData map[string]interface{}) (interface{}, time.Duration, error) {
+	start := time.Now()
+	var body map[string]interface{}
+	body = bodyData
+
+	data := bytes.NewBuffer([]byte{})
+	jsonEncoder := json.NewEncoder(data)
+	jsonEncoder.SetEscapeHTML(false)
+	jsonEncoder.Encode(body)
+
+	req, err := http.NewRequest(aType, url, data)
+	log.Warn(req)
+	if err != nil {
+		log.Error(err)
+		return nil, 0, errors.New("can not make a request by abnormal reason")
+	}
+	// Header - API get user information
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("Authorization", token)
+	//
+	log.Error(token)
+	//
+	client := &http.Client{
+		Timeout: 3 * time.Second,
+	}
+	resp, err := client.Do(req)
+	end := time.Since(start)
+	if err != nil {
+		log.Error(err)
+		return nil, end, errors.New("can not send request to API ")
+	}
+	if resp == nil || resp.Body == nil {
+		return nil, end, errors.New("can not send request to API by null body")
+	}
+	defer func() {
+		//if resp != nil {
+		resp.Body.Close()
+		//}
+	}()
+	log.Error(resp)
+	telegram.SendNotification("GỌI API: " + url + " THỜI GIAN API PHẢN HỒI: " + fmt.Sprint(end) + " STATUS:" + fmt.Sprint(resp.Status))
+	switch resp.StatusCode {
+	case http.StatusOK:
+		var result map[string]interface{}
+		json.NewDecoder(resp.Body).Decode(&result)
+		if result["data"] != nil {
+			res := result["data"]
+			return res, end, nil
+		}
+		return nil, end, errors.New("API return null value")
+	case http.StatusUnauthorized:
+		// callAPI(token, wsToken, aType, url, body)
+		return nil, end, errors.New("forbidden API")
+	default:
+		// Parse body
+		var result map[string]interface{}
+		json.NewDecoder(resp.Body).Decode(&result)
+		return nil, end, errors.New("abnormal error wwith api authen")
+	}
+}
+
+func GetID(token string) (string, string, error) {
+	res, time, err := callAPI(token, "GET", GET_INFO, nil)
+	log.Error(time)
+	log.Error(res)
+	if err != nil {
+		return "", "", err
+	}
+	result := res.(map[string]interface{})
+	log.Error(result)
+	if result["id"] != nil && result["fb_token"] != nil {
+		return result["id"].(string), result["fb_token"].(string), nil
+	}
+	return "", "", errors.New("invalid response")
+}
